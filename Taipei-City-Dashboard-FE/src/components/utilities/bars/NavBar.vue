@@ -74,13 +74,19 @@ const linkQuery = computed(() => {
     </div>
     <div class="navbar-user">
       <button
-        v-if="!(authStore.isMobileDevice && authStore.isNarrowDevice)"
+        v-if="!(authStore.isMobileDevice && authStore.isNarrowDevice) && !authStore.token"
         class="hide-if-mobile"
         @click="toggle"
       >
         <span>{{
           isFullscreen ? "fullscreen_exit" : "fullscreen"
         }}</span>
+      </button>
+      <button 
+        v-if="authStore.token" 
+        @click="authStore.toggleMode"
+      >
+        <span>{{ authStore.user.mode === 'light' ? 'dark_mode' : 'light_mode' }}</span>
       </button>
       <div class="navbar-user-info">
         <button><span>info</span></button>
