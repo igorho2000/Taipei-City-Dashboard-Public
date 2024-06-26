@@ -71,6 +71,13 @@ const linkQuery = computed(() => {
       >
         地圖交叉比對
       </router-link>
+      <router-link
+        :to="`/smartcity${
+          linkQuery.includes('undefined') ? '' : linkQuery
+        }`"
+      >
+        智慧城市
+      </router-link>
     </div>
     <div class="navbar-user">
       <button
