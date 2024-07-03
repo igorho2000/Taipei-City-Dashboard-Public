@@ -14,6 +14,7 @@ import { useMapStore } from "../store/mapStore";
 import { useAuthStore } from "../store/authStore";
 import DashboardView from "../views/DashboardView.vue";
 import MapView from "../views/MapView.vue";
+import SmartCity from "../views/SmartCity.vue";
 import ComponentView from "../views/ComponentView.vue";
 import ComponentInfoView from "../views/ComponentInfoView.vue";
 import EmbedView from "../views/EmbedView.vue";
@@ -37,6 +38,11 @@ const routes = [
 		path: "/mapview",
 		name: "mapview",
 		component: MapView,
+	},
+	{
+		path: "/smartcity",
+		name: "smartcity",
+		component: SmartCity,
 	},
 	{
 		path: "/component",
@@ -166,7 +172,8 @@ router.beforeEach((to) => {
 	// Pass in route info to contentStore if the path starts with /dashboard or /mapview
 	if (
 		to.path.toLowerCase() === "/dashboard" ||
-		to.path.toLowerCase() === "/mapview"
+		to.path.toLowerCase() === "/mapview" ||
+		to.path.toLowerCase() === "/smartcity"
 	) {
 		contentStore.clearEditDashboard();
 		contentStore.setRouteParams(to.path, to.query.index);
