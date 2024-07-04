@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import pluginVue from "eslint-plugin-vue";
 import globals from "globals";
 
+
 export default [
 	js.configs.recommended,
 	...pluginVue.configs["flat/recommended"],
@@ -16,7 +17,7 @@ export default [
 		},
 		rules: {
 			indent: ["error", "tab"],
-			quotes: "off",
+			quotes: "true",
 			semi: "off",
 			"spaced-comment": "off",
 			"no-console": ["error", { allow: ["warn", "error"] }],
