@@ -1,73 +1,57 @@
 <template>
-  <div class="conversation-page">
-    <div class="messages">
-      <div
-        v-for="(message, index) in messages"
-        :key="index"
-        class="message"
-      >
-        {{ message }}
-      </div>
-    </div>
-    <input
-      v-model="newMessage"
-      placeholder="Type a message..."
-    >
-    <button @click="sendMessage">
-      Send
-    </button>
-  </div>
+	<main>
+		<div id="chat_container">
+			<div v-for="(chat, i) in wrapper" :key="i" class="wrapper" :class="{ ai: chat.isAi }">
+				<Chat :chat="chat" :key="i" />
+			</div>
+		</div>
+		<form @submit.prevent="fetchAnswer">
+			<textarea rows="1" cols="1" placeholder="Ask VueChat..." v-model="question"></textarea>
+			<button type="submit"><img src="../assets/send.svg" alt="send" /></button>			
+		</form>
+	</main>
 </template>
+<script setup>
+import { ref } from "vue";
+import Chat from "../components/Chat.vue";
+const question = ref("");
+const wrapper = ref([]);
+const loading = ref(false);
 
-<script>
-export default {
-	name: 'ConversationPage',
-	data() {
-		return {
-			messages: [],
-			newMessage: ''
-		};
-	},
-	methods: {
-		sendMessage() {
-			if (this.newMessage.trim() !== '') {
-				this.messages.push(this.newMessage);
-				this.newMessage = '';
-			}
-		}
+const fetchAnswer = async () => {
+	try {
+		loading.value = true;
+		wrapper.value.push({
+			isAi: false,
+			value: question.value,
+		});
+		wrapper.value.push({
+			isAi: true,
+			value: "Loading....",
+		});
+		const res = await fetch("http://localhost:8000", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				question: question.value,
+			}),
+		});
+		// console.log(res);
+		const data = await res.json();
+		console.log(data);
+		const parsedData = data.bot.trim();
+		wrapper.value.pop();
+		wrapper.value.push({
+			isAi: true,
+			value: parsedData,
+		});
+	} catch (error) {
+	} finally {
+		loading.value = false;
+		question.value = ''
 	}
 };
 </script>
-
-<style>
-.conversation-page {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 20px;
-}
-
-.messages {
-	margin-bottom: 20px;
-	width: 100%;
-	max-height: 300px;
-	overflow-y: auto;
-}
-
-.message {
-	background-color: #f0f0f0;
-	margin: 5px 0;
-	padding: 10px;
-	border-radius: 5px;
-}
-
-input {
-	margin-right: 10px;
-	padding: 10px;
-	width: calc(100% - 120px);
-}
-
-button {
-	padding: 10px 20px;
-}
-</style>
+<style src='../assets/styles/chat.css' scoped></style>
