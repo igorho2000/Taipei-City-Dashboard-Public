@@ -19,12 +19,30 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
+# Function to safely get environment variables with default values
+def get_env_or_default(key, default):
+    value = os.getenv(key)
+    if value is None or value.strip() == '':
+        print(f"Warning: Environment variable {key} is not set. Using default value: {default}")
+        return default
+    return value
+
+# Construct the database URI with error handling
+db_uri = "postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}".format(
+    user=get_env_or_default('DB_DASHBOARD_USER', 'postgres'),
+    password=get_env_or_default('DB_DASHBOARD_PASSWORD', 'Abb00717717abb'),
+    host=get_env_or_default('DB_DASHBOARD_HOST', 'postgres-data'),
+    port=get_env_or_default('DB_DASHBOARD_PORT', '5432'),
+    dbname=get_env_or_default('DB_DASHBOARD_DBNAME', 'dashboard')
+)
+
 app = Flask(__name__, static_folder=".")
 CORS(app)
 
 model = ChatOpenAI(model="gpt-3.5-turbo")
 memory = {}
-db = SQLDatabase.from_uri('postgresql+psycopg2://postgres:Abb00717717abb@postgres-data/dashboard')
+
+db = SQLDatabase.from_uri(db_uri)
 execute_query = QuerySQLDataBaseTool(db=db)
 write_query = create_sql_query_chain(model, db)
 
