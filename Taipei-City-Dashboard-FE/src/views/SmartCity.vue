@@ -16,6 +16,7 @@
 </template>
 
 <script>
+
 import { ref } from 'vue'
 
 export default {
@@ -44,9 +45,9 @@ export default {
 				const data = await response.json()
 
 				if (!apiResponse.ok) {
-                    throw new Error(`API 錯誤: ${data.error || apiResponse.statusText}`)
-                }
-				
+					throw new Error(`API 錯誤: ${data.error || apiResponse.statusText}`)
+				}
+
 				chatHistory.value.push({ role: 'assistant', content: data.response })
 				this.prompt = '' // 清空輸入框
 			} catch (error) {
@@ -141,6 +142,12 @@ button {
 
 button:hover {
 	background-color: #218838;
+}
+
+button:active {
+	background-color: #145222;
+	transform: scale(0.95, 0.95);
+	transition-duration: 0.3s;
 }
 
 button:disabled {
