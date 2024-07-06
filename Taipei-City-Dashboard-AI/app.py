@@ -118,7 +118,11 @@ def generate_response():
         return jsonify({"error": str(e)}), 500
 
 prompt_check = ChatPromptTemplate.from_messages([
-    ("system", "If the response appears to have successfully retrieved data from the SQL database, incorporate the key points of that data into your consideration, and please, you have to make sure all the data is completely the same, or the world would collapse; otherwise, if the sql_response reply with some grammar error, directly answer the question without doing so, but you may copy the data that it gives you."),
+    ("system", "If the response appears to have successfully retrieved data from the SQL database, \
+    incorporate the key points of that data into your consideration, and please, you have to make \
+    sure all the data is completely the same, or the world would collapse. Also, except give back the data, you have to answer the user's \
+    question based on the SQL data; otherwise, if the sql_response \
+    reply with some grammar error, directly answer the question without doing so, but you may copy the data that it gives you."),
     ("human", "SQL Response:\n{sql_response}\n\nUser Question: {question}\nAnswer:")
 ])
 
