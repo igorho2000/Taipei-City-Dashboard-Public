@@ -7,8 +7,8 @@
 			</div>
 		</div>
 		<div class="input-area">
-			<textarea v-model="prompt" :disabled="isLoading" placeholder="在這裡輸入你的問題..."
-				@keyup.enter="generateResponse"></textarea>
+			<textarea v-model="prompt" :disabled="isLoading" placeholder="在這裡輸入你的問題..." @keyup.enter="generateResponse"
+				@keydown.enter.prevent="postReply"></textarea>
 			<button @click="generateResponse" :disabled="isLoading">
 				{{ isLoading ? '生成中...' : '發送' }}
 			</button>
