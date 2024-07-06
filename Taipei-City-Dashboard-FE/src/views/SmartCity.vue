@@ -87,19 +87,17 @@ h1 {
 }
 
 .messages {
-	display: flex;
-	flex-direction: column;
-	max-height: 500px;
+	height: 500px;
 	padding: 10px;
 	border: 1px solid #e1e4e8;
 	border-radius: 4px;
 	margin-bottom: 20px;
-	overflow: auto;
+	overflow: hidden;
 	overflow-y: scroll;
 }
 
 .message {
-	display: inline-block;
+	display: flex;
 	width: fit-content;
 	max-width: 100%;
 	margin-bottom: 10px;
@@ -109,8 +107,7 @@ h1 {
 }
 
 .user {
-	align-self: flex-start;
-	justify-content: right;
+	justify-content: flex-end;
 	background-color: #007bff;
 	color: white;
 	margin-left: auto;
@@ -119,7 +116,7 @@ h1 {
 }
 
 .assistant {
-	align-self: flex-end;
+	justify-content: flex-start;
 	background-color: white;
 	color: #333;
 	margin-right: auto;
@@ -130,7 +127,6 @@ h1 {
 .input-area {
 	display: flex;
 	flex-direction: column;
-	word-wrap: break-word;
 }
 
 textarea {
