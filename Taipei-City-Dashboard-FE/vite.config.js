@@ -37,8 +37,8 @@ export default defineConfig({
 				rewrite: (path) => path.replace(/^\/geo_server/, ""),
 			},
 		},
-		// watch: {
-		// 	usePolling: true,
-		// },
+		watch: {
+		usePolling: true,
+		},
 	},
 });
