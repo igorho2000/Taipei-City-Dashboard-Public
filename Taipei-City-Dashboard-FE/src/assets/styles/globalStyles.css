@@ -20,6 +20,7 @@
 	--color-normal-text: white;
 	--color-complement-text: #888787;
 	--color-component-background: #282a2c;
+	--chat-bg-light: #282a2c;
 }
 
 .light {
@@ -35,8 +36,17 @@
 	--dashboardcomponent-color-normal-text: black;
 	--dashboardcomponent-color-complement-text: #888787;
 	--dashboardcomponent-color-component-background: #f0f0f0;
+	--chat-bg-light: #f0f0f0;
 	--img-filter: none;
 }
+
+body.light-mode .chat-container {
+	background: var(--chat-bg-light);
+  }
+  
+  body.dark-mode .chat-container {
+	background: var(--chat-bg-dark);
+  }
 
 * {
 	margin: 0;
