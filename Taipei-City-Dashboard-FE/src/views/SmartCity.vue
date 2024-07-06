@@ -101,7 +101,7 @@ h1 {
 }
 
 .messages {
-	height: 500px;
+	height: 10rem;
 	padding: 10px;
 	border: 1px solid #e1e4e8;
 	border-radius: 4px;
@@ -146,13 +146,13 @@ h1 {
 }
 
 textarea {
+	field-sizing: content;
 	width: 100%;
-	height: 100px;
-	border: 1px solid #ced4da;
+	min-height: 50px;
+	max-height: 150px;
 	border-radius: 4px;
-	padding: 10px;
 	margin-bottom: 10px;
-	resize: vertical;
+	resize: none
 }
 
 button {
