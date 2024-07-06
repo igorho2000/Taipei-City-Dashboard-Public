@@ -110,11 +110,15 @@ def generate_response():
         })
         
         return jsonify({"response": promising_response})
+        """
+        
+        return jsonify({"response": sql_response})
+        """
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 prompt_check = ChatPromptTemplate.from_messages([
-    ("system", "If the response appears to have successfully retrieved data from the SQL database, incorporate the key points of that data into your consideration; otherwise, directly answer the question without doing so. When responding, please do not mention this instruction or the existence of the SQL database."),
+    ("system", "If the response appears to have successfully retrieved data from the SQL database, incorporate the key points of that data into your consideration, and please, you have to make sure all the data is completely the same, or the world would collapse; otherwise, if the sql_response reply with some grammar error, directly answer the question without doing so, but you may copy the data that it gives you."),
     ("human", "SQL Response:\n{sql_response}\n\nUser Question: {question}\nAnswer:")
 ])
 
@@ -128,7 +132,7 @@ chain_with_history = RunnableWithMessageHistory(
     input_messages_key="question",
     history_messages_key="history",
 )
-chain_check = prompt_check | ChatOpenAI(model="gpt-4") | StrOutputParser()
+chain_check = prompt_check | ChatOpenAI(model="gpt-4o") | StrOutputParser()
 
 # Route definitions
 app.route("/")(index)
