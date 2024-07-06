@@ -7,7 +7,7 @@
 			</div>
 		</div>
 		<div class="input-area">
-			<textarea v-model="prompt" placeholder="在這裡輸入你的問題..." @keyup.enter.ctrl="generateResponse"></textarea>
+			<textarea v-model="prompt" placeholder="在這裡輸入你的問題..." @keyup.enter="generateResponse"></textarea>
 			<button @click="generateResponse" :disabled="isLoading">
 				{{ isLoading ? '生成中...' : '發送' }}
 			</button>
@@ -113,6 +113,7 @@ h1 {
 	margin-left: auto;
 	margin-right: 1em;
 	max-width: 60%;
+	word-wrap: break-word;
 }
 
 .assistant {
@@ -122,6 +123,7 @@ h1 {
 	margin-right: auto;
 	margin-left: 1em;
 	max-width: 60%;
+	word-wrap: break-word;
 }
 
 .input-area {
