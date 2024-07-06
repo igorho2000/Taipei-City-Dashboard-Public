@@ -33,6 +33,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:latest
+    user: root
     container_name: pgadmin
     restart: always
     environment:
