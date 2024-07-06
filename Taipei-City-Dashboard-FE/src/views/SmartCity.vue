@@ -1,7 +1,7 @@
 <template>
 	<div class="chat-container">
-		<h1>OpenAI API Vue 示例</h1>
-		<div class="messages">
+		<h1>智慧城市聊天室</h1>
+		<div class="messages" ref="messagesContainer">
 			<div v-for="(message, index) in chatHistory" :key="index" :class="['message', message.role]">
 				{{ message.content }}
 			</div>
@@ -16,40 +16,49 @@
 </template>
 
 <script>
-
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 
 export default {
-	name: 'OpenAIChat',
+	name: 'SmartCity',
 	setup() {
 		const prompt = ref('')
 		const chatHistory = ref([])
 		const isLoading = ref(false)
+		const messagesContainer = ref(null)
+
+		const scrollToBottom = () => {
+			nextTick(() => {
+				if (messagesContainer.value) {
+					messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+				}
+			})
+		}
 
 		const generateResponse = async () => {
 			if (!prompt.value.trim()) return
 
 			isLoading.value = true
 			chatHistory.value.push({ role: 'user', content: prompt.value })
+			scrollToBottom()
 
 			try {
-				const response = await fetch('/generate', {
+				const response = await fetch('http://localhost:5001/generate', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
-						prompt: this.prompt,
+						prompt: prompt.value,
 						session_id: 'user123'  // 使用唯一的會話 ID
 					})
 				})
 
 				const data = await response.json()
 
-				if (!apiResponse.ok) {
-					throw new Error(`API 錯誤: ${data.error || apiResponse.statusText}`)
+				if (!response.ok) {
+					throw new Error(`API 錯誤: ${data.error || response.statusText}`)
 				}
 
 				chatHistory.value.push({ role: 'assistant', content: data.response })
-				this.prompt = '' // 清空輸入框
+				scrollToBottom()
 			} catch (error) {
 				console.error('Error:', error)
 				chatHistory.value.push({ role: 'assistant', content: '抱歉，發生錯誤。請稍後再試。' })
@@ -59,11 +68,16 @@ export default {
 			}
 		}
 
+		onMounted(() => {
+			scrollToBottom()
+		})
+
 		return {
 			prompt,
 			chatHistory,
 			isLoading,
-			generateResponse
+			generateResponse,
+			messagesContainer
 		}
 	}
 }

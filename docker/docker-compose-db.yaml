@@ -33,7 +33,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    user: root
     container_name: pgadmin
     restart: always
     environment:
@@ -45,7 +44,25 @@ services:
     volumes:
       - ./db-data/pgadmin-data:/var/lib/pgadmin
 
+  dashboard-ai:
+    build: ../Taipei-City-Dashboard-AI
+    container_name: dashboard-ai
+    volumes:
+      - ../Taipei-City-Dashboard-AI:/app
+    restart: always
+    environment:  
+      - FLASK_ENV=development
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+      - FLASK_RUN_HOST=0.0.0.0
+    ports:
+      - "5001:5000"
+    depends_on:
+      - postgres-data
+
 networks:
   default:
     name: br_dashboard
     external: true
+    # aliases:
+    #  - dashboard-ai
