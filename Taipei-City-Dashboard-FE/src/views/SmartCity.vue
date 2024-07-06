@@ -7,7 +7,8 @@
 			</div>
 		</div>
 		<div class="input-area">
-			<textarea v-model="prompt" placeholder="在這裡輸入你的問題..." @keyup.enter="generateResponse"></textarea>
+			<textarea v-model="prompt" :disabled="isLoading" placeholder="在這裡輸入你的問題..."
+				@keyup.enter="generateResponse"></textarea>
 			<button @click="generateResponse" :disabled="isLoading">
 				{{ isLoading ? '生成中...' : '發送' }}
 			</button>
@@ -36,11 +37,10 @@ export default {
 
 		const generateResponse = async () => {
 			if (!prompt.value.trim()) return
-
 			isLoading.value = true
+
 			chatHistory.value.push({ role: 'user', content: prompt.value })
 			scrollToBottom()
-
 			try {
 				const response = await fetch('http://localhost:5001/generate', {
 					method: 'POST',
@@ -52,6 +52,7 @@ export default {
 				})
 
 				const data = await response.json()
+				isLoading.value = false;
 
 				if (!response.ok) {
 					throw new Error(`API 錯誤: ${data.error || response.statusText}`)
@@ -95,7 +96,8 @@ export default {
 }
 
 h1 {
-	color: #333;
+	color: var(--chat-bg-light);
+	filter: invert(1);
 	text-align: center;
 	margin-bottom: 20px;
 }
