@@ -87,36 +87,50 @@ h1 {
 }
 
 .messages {
-	height: 400px;
-	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	max-height: 500px;
+	padding: 10px;
 	border: 1px solid #e1e4e8;
 	border-radius: 4px;
-	padding: 10px;
 	margin-bottom: 20px;
+	overflow: auto;
+	overflow-y: scroll;
 }
 
 .message {
+	display: inline-block;
+	width: fit-content;
+	max-width: 100%;
 	margin-bottom: 10px;
 	padding: 8px 12px;
 	border-radius: 18px;
-	max-width: 80%;
+	word-wrap: break-word;
 }
 
 .user {
+	align-self: flex-start;
+	justify-content: right;
 	background-color: #007bff;
 	color: white;
-	align-self: flex-end;
 	margin-left: auto;
+	margin-right: 1em;
+	max-width: 60%;
 }
 
 .assistant {
-	background-color: #f1f3f5;
+	align-self: flex-end;
+	background-color: white;
 	color: #333;
+	margin-right: auto;
+	margin-left: 1em;
+	max-width: 60%;
 }
 
 .input-area {
 	display: flex;
 	flex-direction: column;
+	word-wrap: break-word;
 }
 
 textarea {
