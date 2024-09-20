@@ -48,4 +48,5 @@ steps:
       - "--region"
       - us-central1
       - "--allow-unauthenticated"
-logging: "CLOUD_LOGGING_ONLY"
+options:
+  logging: "CLOUD_LOGGING_ONLY"
