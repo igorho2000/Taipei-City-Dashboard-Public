@@ -61,37 +61,33 @@ def _R0087(**kwargs):
     data.columns = data.columns.str.lower()
     data = data.rename(
         columns={
-            "cid": "cid",
-            "trainnumber": "train_number",
-            "stationid": "station_id",
-            "stationname": "station_name",
-            "cn1": "cn1",
             "cart1l": "car1",
             "cart2l": "car2",
             "cart3l": "car3",
             "cart4l": "car4",
             "cart5l": "car5",
             "cart6l": "car6",
-            "utime": "data_time",
+            "utime": "updatetime",
         }
     )
+    data["stationname"] = data["stationid"].copy()
     # define columns
-    str_cols = ["cid", "train_number", "station_id", "station_name", "cn1"]
+    str_cols = ["cid", "trainnumber", "stationid", "stationname", "cn1"]
     for col in str_cols:
         data[col] = data[col].astype(str)
     num_cols = ["car1", "car2", "car3", "car4", "car5", "car6"]
     for col in num_cols:
         data[col] = pd.to_numeric(data[col], errors="coerce")
     # time
-    data["data_time"] = convert_str_to_time_format(data["data_time"])
+    data["data_time"] = convert_str_to_time_format(data["updatetime"])
     # select columns
     ready_data = data[
         [
             "data_time",
             "cid",
-            "train_number",
-            "station_id",
-            "station_name",
+            "trainnumber",
+            "stationid",
+            "stationname",
             "cn1",
             "car1",
             "car2",
