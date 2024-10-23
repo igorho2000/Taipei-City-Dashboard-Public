@@ -18,7 +18,17 @@ steps:
   - name: python
     entrypoint: pip
     dir: "Taipei-City-Dashboard-DE/cicd"
-    args: ["install", "-r", "utils/requirements.txt"]
+    args: ["install", "--upgrade", "pip"]
+
+  - name: python
+    entrypoint: pip
+    dir: "Taipei-City-Dashboard-DE/cicd"
+    args: ["install", "--upgrade", "setuptools", "wheel"]
+
+  - name: python
+    entrypoint: pip
+    dir: "Taipei-City-Dashboard-DE/cicd"
+    args: ["install", "-r", "utils/requirements.txt", "--no-cache-dir"]
 
   # run
   - name: python
