@@ -14,22 +14,22 @@
 
 # [START composer_cicd_dagsync_yaml]
 steps:
-    # install dependencies
-    - name: python
-      entrypoint: pip
-      dir: "Taipei-City-Dashboard-DE/cicd"
-      args: ["install", "-r", "utils/requirements.txt", "--user"]
+  # install dependencies
+  - name: python
+    entrypoint: pip
+    dir: "Taipei-City-Dashboard-DE/cicd"
+    args: ["install", "-r", "utils/requirements.txt"]
 
-    # run
-    - name: python
-      entrypoint: python
-      dir: "Taipei-City-Dashboard-DE"
-      args:
-          [
-              "cicd/utils/add_dags_to_composer.py",
-              "--dags_directory=${_DAGS_DIRECTORY}",
-              "--dags_bucket=${_DAGS_BUCKET}",
-          ]
+  # run
+  - name: python
+    entrypoint: python
+    dir: "Taipei-City-Dashboard-DE"
+    args:
+      [
+        "cicd/utils/add_dags_to_composer.py",
+        "--dags_directory=${_DAGS_DIRECTORY}",
+        "--dags_bucket=${_DAGS_BUCKET}",
+      ]
 options:
-    logging: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLY
 # [END composer_cicd_dagsync_yaml]
