@@ -32,7 +32,7 @@ export default defineConfig({
 			// 	rewrite: (path) => path.replace("/dev", "/v1"),
 			// },
 			"/api": {
-				target: "https://dashboard-be-427615211567.us-central1.run.app/api/v1",
+				target: "https://dashboard-be-427615211567.us-central1.run.app",
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/api/, ""),
 			},
