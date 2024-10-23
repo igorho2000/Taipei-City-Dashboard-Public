@@ -26,10 +26,15 @@ export default defineConfig({
 		host: "0.0.0.0",
 		port: 80,
 		proxy: {
-			"/api/dev": {
-				target: "http://dashboard-be:8080",
+			// "/api/dev": {
+			// 	target: "http://dashboard-be:8080",
+			// 	changeOrigin: true,
+			// 	rewrite: (path) => path.replace("/dev", "/v1"),
+			// },
+			"/api": {
+				target: "https://dashboard-be-427615211567.us-central1.run.app/api/v1",
 				changeOrigin: true,
-				rewrite: (path) => path.replace("/dev", "/v1"),
+				rewrite: (path) => path.replace(/^\/api/, ""),
 			},
 			"/geo_server": {
 				target: "https://geoserver.tuic.gov.taipei/geoserver/",
