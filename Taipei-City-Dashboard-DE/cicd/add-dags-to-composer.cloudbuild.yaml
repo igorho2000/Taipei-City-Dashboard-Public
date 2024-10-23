@@ -14,21 +14,21 @@
 
 # [START composer_cicd_dagsync_yaml]
 steps:
-  # install dependencies
-  - name: python
-    entrypoint: pip
-    dir: "Taipei-City-Dashboard-DE/cicd"
-    args: ["install", "--upgrade", "pip"]
+  # # install dependencies
+  # - name: python
+  #   entrypoint: pip
+  #   dir: "Taipei-City-Dashboard-DE/cicd"
+  #   args: ["install", "--upgrade", "pip"]
+
+  # - name: python
+  #   entrypoint: pip
+  #   dir: "Taipei-City-Dashboard-DE/cicd"
+  #   args: ["install", "--upgrade", "setuptools", "wheel"]
 
   - name: python
     entrypoint: pip
     dir: "Taipei-City-Dashboard-DE/cicd"
-    args: ["install", "--upgrade", "setuptools", "wheel"]
-
-  - name: python
-    entrypoint: pip
-    dir: "Taipei-City-Dashboard-DE/cicd"
-    args: ["install", "-r", "utils/requirements.txt", "--no-cache-dir"]
+    args: ["install", "-r", "utils/requirements.txt"]
 
   # run
   - name: python
