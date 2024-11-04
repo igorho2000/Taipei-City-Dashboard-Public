@@ -26,8 +26,8 @@ export const useAuthStore = defineStore("auth", {
 			is_admin: false,
 		},
 		editUser: {},
-		token: null,
-		isso_token: null,
+		accessKey: null,
+		taipeiPass: null,
 		errorMessage: "",
 		isMobileDevice: false,
 		isNarrowDevice: false,
@@ -44,10 +44,10 @@ export const useAuthStore = defineStore("auth", {
 			this.checkIfMobile();
 
 			// Check if the user is logged in
-			if (localStorage.getItem("token")) {
-				this.token = localStorage.getItem("token");
-				if (localStorage.getItem("isso_token")) {
-					this.isso_token = localStorage.getItem("isso_token");
+			if (localStorage.getItem("accessKey")) {
+				this.accessKey = localStorage.getItem("accessKey");
+				if (localStorage.getItem("taipeiPass")) {
+					this.taipeiPass = localStorage.getItem("taipeiPass");
 				}
 				const response = await http.get("/user/me");
 				this.user = response.data.user;
@@ -76,9 +76,17 @@ export const useAuthStore = defineStore("auth", {
 		// 3. Taipei Pass Login
 		async loginByTaipeiPass(code) {
 			try {
+				// Validate code parameter
+				if (!code || typeof code !== 'string') {
+					throw new Error("Invalid authentication code");
+				}
+				
+				// Sanitize and encode input parameter
+				const sanitizedCode = encodeURIComponent(code.trim());
+
 				const response = await http.get("/auth/callback", {
 					params: {
-						code: code,
+						code: sanitizedCode,
 					},
 				});
 				this.handleSuccessfullLogin(response);
@@ -92,11 +100,11 @@ export const useAuthStore = defineStore("auth", {
 			const dialogStore = useDialogStore();
 			const contentStore = useContentStore();
 
-			this.token = response.data.token;
-			localStorage.setItem("token", this.token);
+			this.accessKey = response.data.token;
+			localStorage.setItem("accessKey", this.accessKey);
 			if (response.data.isso_token) {
-				this.isso_token = response.data.isso_token;
-				localStorage.setItem("isso_token", this.isso_token);
+				this.taipeiPass = response.data.isso_token;
+				localStorage.setItem("taipeiPass", this.taipeiPass);
 			}
 			this.user = response.data.user;
 			this.editUser = JSON.parse(JSON.stringify(this.user));
@@ -110,25 +118,25 @@ export const useAuthStore = defineStore("auth", {
 			const dialogStore = useDialogStore();
 			const contentStore = useContentStore();
 
-			localStorage.removeItem("token");
+			localStorage.removeItem("accessKey");
 			this.user = {};
 			this.editUser = {};
-			this.token = null;
+			this.accessKey = null;
 
 			contentStore.publicDashboards = [];
 
-			if (this.isso_token) {
+			if (this.taipeiPass) {
 				await http.post(
 					"/auth/logout",
 					{},
 					{
 						params: {
-							isso_token: this.isso_token,
+							isso_token: this.taipeiPass,
 						},
 					}
 				);
-				localStorage.removeItem("isso_token");
-				this.isso_token = null;
+				localStorage.removeItem("taipeiPass");
+				this.taipeiPass = null;
 			}
 
 			router.go();
