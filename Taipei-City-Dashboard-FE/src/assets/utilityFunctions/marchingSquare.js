@@ -15,8 +15,15 @@
 // ]
 
 export function marchingSquare(discreteData, isoValue) {
-	let columnN = discreteData[0].length;
-	let rowN = discreteData.length;
+	// Input validation and size limits
+	if (!Array.isArray(discreteData) || !discreteData.length || !Array.isArray(discreteData[0])) {
+		console.error("Invalid discrete data format");
+		return [];
+	}
+
+	const MAX_GRID_SIZE = 1000;
+	let columnN = Math.min(discreteData[0].length, MAX_GRID_SIZE);
+	let rowN = Math.min(discreteData.length, MAX_GRID_SIZE);
 	let result = [];
 
 	//  discreteData:

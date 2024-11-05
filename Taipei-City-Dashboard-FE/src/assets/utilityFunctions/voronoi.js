@@ -353,8 +353,12 @@ function findVoronoiCell(point) {
 	];
 	let currentTriangle = currentEdge.t2;
 
+	// Limit the number of iterations
+	const MAX_ITERATIONS = 1000;
+	let iterationCount = 0;
+
 	// Go through (1) each edge connected to the point and (2) each triangle surrounding the point.
-	while (currentTriangle.center !== firstPoint) {
+	while (currentTriangle.center !== firstPoint && iterationCount++ < MAX_ITERATIONS) {
 		let i = 0;
 		for (i = 0; i < 3; i++) {
 			if (

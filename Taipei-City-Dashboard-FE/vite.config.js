@@ -25,7 +25,6 @@ export default defineConfig({
 	server: {
 		host: "0.0.0.0",
 		port: 80,
-		cros: true,
 		proxy: {
 			// "/api/dev": {
 			// 	target: "http://dashboard-be:8080",
@@ -33,12 +32,12 @@ export default defineConfig({
 			// 	rewrite: (path) => path.replace("/dev", "/v1"),
 			// },
 			"/api": {
-				target: "https://dashboard-be-427615211567.us-central1.run.app/api/v1",
+				target: "https://citydashboard.taipei/api/v1",
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/api/, ""),
 			},
 			"/geo_server": {
-				target: "https://geoserver.tuic.gov.taipei/geoserver/",
+				target: "https://citydashboard.taipei/geo_server/",
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/geo_server/, ""),
 			},

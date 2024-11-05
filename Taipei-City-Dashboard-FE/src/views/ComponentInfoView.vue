@@ -54,7 +54,7 @@ onMounted(() => {
       v-if="
         authStore.isMobileDevice ||
           authStore.isNarrowDevice ||
-          !authStore.token
+          !authStore.accessKey
       "
       @click="router.back()"
     >
@@ -88,9 +88,9 @@ onMounted(() => {
           !contentStore.editDashboard.components
             .map((item) => item.id)
             .includes(dialogStore.moreInfoContent.id) &&
-            !!authStore.token
+            !!authStore.accessKey
         "
-        :favorite-btn="!!authStore.token"
+        :favorite-btn="!!authStore.accessKey"
         :is-favorite="
           contentStore.favorites?.components.includes(
             dialogStore.moreInfoContent.id
@@ -127,7 +127,7 @@ onMounted(() => {
       </div>
       <div class="componentinfoview-content-control">
         <button
-          v-if="authStore.token"
+          v-if="authStore.accessKey"
           @click="
             dialogStore.showReportIssue(
               dialogStore.moreInfoContent.id,

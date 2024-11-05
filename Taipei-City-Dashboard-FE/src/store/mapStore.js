@@ -550,16 +550,21 @@ export const useMapStore = defineStore("map", {
 
 			// Calculate cell for each coordinate
 			let cells = voronoi(coords);
+			
+			// Limit the number of iterations
+			const MAX_ITERATIONS = 1000;
 
-			// Push cell outlines to source data
-			for (let i = 0; i < cells.length; i++) {
-				voronoi_source.features.push({
-					...features[i],
-					geometry: {
-						type: "LineString",
-						coordinates: cells[i],
-					},
-				});
+			if (cells.length < MAX_ITERATIONS) {
+				// Push cell outlines to source data
+				for (let i = 0; i < cells.length; i++) {
+					voronoi_source.features.push({
+						...features[i],
+						geometry: {
+							type: "LineString",
+							coordinates: cells[i],
+						},
+					});
+				}
 			}
 
 			// Add source and layer

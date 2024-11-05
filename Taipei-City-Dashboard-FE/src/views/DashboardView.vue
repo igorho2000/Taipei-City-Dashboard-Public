@@ -61,7 +61,7 @@ function handleMoreInfo(item) {
       :config="item"
       mode="half"
       :info-btn="true"
-      :favorite-btn="authStore.token ? true : false"
+      :favorite-btn="authStore.accessKey ? true : false"
       :is-favorite="contentStore.favorites?.components.includes(item.id)"
       @favorite="
         (id) => {
@@ -93,7 +93,7 @@ function handleMoreInfo(item) {
           .includes(contentStore.currentDashboard.index)
       "
       :favorite-btn="
-        authStore.token &&
+        authStore.accessKey &&
           contentStore.currentDashboard.icon !== 'favorite'
       "
       :is-favorite="contentStore.favorites?.components.includes(item.id)"

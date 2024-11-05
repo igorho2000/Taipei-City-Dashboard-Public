@@ -126,7 +126,7 @@ router.beforeEach((to) => {
 		) {
 			router.push("/dashboard");
 		}
-	} else if (authStore.token) {
+	} else if (authStore.accessKey) {
 		if (to.name === "callback") {
 			router.push("/dashboard");
 		}
@@ -137,7 +137,7 @@ router.beforeEach((to) => {
 router.beforeEach((to) => {
 	const authStore = useAuthStore();
 	if (to.name.includes("admin")) {
-		if (!authStore.user.is_admin || !authStore.token) {
+		if (!authStore.user.is_admin || !authStore.accessKey) {
 			if (authStore.user.is_admin === false) {
 				router.push("/dashboard");
 			} else {
@@ -149,11 +149,11 @@ router.beforeEach((to) => {
 			}
 		}
 	} else if (to.name === "component") {
-		if (!authStore.token) {
+		if (!authStore.accessKey) {
 			router.push("/dashboard");
 		}
 	} else if (to.name === "component-info") {
-		if (!authStore.token && !authStore.isNarrowDevice) {
+		if (!authStore.accessKey && !authStore.isNarrowDevice) {
 			router.push("/dashboard");
 		}
 	}

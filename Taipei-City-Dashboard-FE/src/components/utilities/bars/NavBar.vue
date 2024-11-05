@@ -48,7 +48,7 @@ const linkQuery = computed(() => {
       class="navbar-tabs"
     >
       <router-link
-        v-if="authStore.token"
+        v-if="authStore.accessKey"
         :to="`/component`"
         :class="{
           'router-link-active':
@@ -106,7 +106,7 @@ const linkQuery = computed(() => {
       </div>
       <div
         v-if="
-          authStore.token &&
+          authStore.accessKey &&
             !(authStore.isMobileDevice && authStore.isNarrowDevice)
         "
         class="navbar-user-user"

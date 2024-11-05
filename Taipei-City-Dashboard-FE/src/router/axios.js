@@ -23,8 +23,8 @@ http.interceptors.request.use((request) => {
 	contentStore.loading = true;
 	contentStore.error = false;
 
-	if (authStore.token) {
-		request.headers.setAuthorization(`Bearer ${authStore.token}`);
+	if (authStore.accessKey) {
+		request.headers.setAuthorization(`Bearer ${authStore.accessKey}`);
 	} else {
 		request.headers.setAuthorization(`Bearer`);
 	}
@@ -37,8 +37,8 @@ http.interceptors.response.use(
 		// handle loading directly in request since sometimes requests are stringed together
 		const authStore = useAuthStore();
 		if (response.data.token) {
-			authStore.token = response.data.token;
-			localStorage.setItem("token", response.data.token);
+			authStore.accessKey = response.data.token;
+			localStorage.setItem("accessKey", response.data.token);
 		}
 		return response;
 	},
@@ -52,7 +52,7 @@ http.interceptors.response.use(
 
 		switch (error.response.status) {
 			case 401:
-				if (authStore.token) {
+				if (authStore.accessKey) {
 					dialogStore.showNotification(
 						"fail",
 						"401，登入逾時，請重新登入"
@@ -66,7 +66,7 @@ http.interceptors.response.use(
 				}
 				break;
 			case 403:
-				if (authStore.token) {
+				if (authStore.accessKey) {
 					dialogStore.showNotification(
 						"fail",
 						"403，沒有權限執行此動作"

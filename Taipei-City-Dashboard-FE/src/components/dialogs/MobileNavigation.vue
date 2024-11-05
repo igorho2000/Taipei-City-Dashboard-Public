@@ -25,7 +25,7 @@ const authStore = useAuthStore();
         />
         <div class="dialogcontainer-dialog">
           <div class="mobilenavigation">
-            <div v-if="authStore.token">
+            <div v-if="authStore.accessKey">
               <h2>我的最愛</h2>
               <SideBarTab
                 icon="favorite"
