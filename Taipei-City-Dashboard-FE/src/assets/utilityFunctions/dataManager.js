@@ -1,4 +1,4 @@
-
+// 測試打註解推code
 export class DataManager {
 	constructor(data) {
 		this.obj = data || {};
