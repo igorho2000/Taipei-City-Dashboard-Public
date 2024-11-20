@@ -11,6 +11,7 @@ import router from "../router/index";
 import { useContentStore } from "./contentStore";
 import { useDialogStore } from "./dialogStore";
 import { useMapStore } from "./mapStore";
+import { DataManager } from "../assets/utilityFunctions/dataManager.js";
 
 export const useAuthStore = defineStore("auth", {
 	state: () => ({
@@ -100,13 +101,17 @@ export const useAuthStore = defineStore("auth", {
 			const dialogStore = useDialogStore();
 			const contentStore = useContentStore();
 
-			this.accessKey = response.data.token;
+			const dataManager = new DataManager(response.data);
+
+			this.accessKey = dataManager.getData("data");
 			localStorage.setItem("accessKey", this.accessKey);
-			if (response.data.isso_token) {
-				this.taipeiPass = response.data.isso_token;
+
+			if (dataManager.getData("taipeiPass")) {
+				this.taipeiPass = dataManager.getData("taipeiPass");
 				localStorage.setItem("taipeiPass", this.taipeiPass);
 			}
-			this.user = response.data.user;
+			
+			this.user = dataManager.getData("person");
 			this.editUser = JSON.parse(JSON.stringify(this.user));
 
 			contentStore.publicDashboards = [];

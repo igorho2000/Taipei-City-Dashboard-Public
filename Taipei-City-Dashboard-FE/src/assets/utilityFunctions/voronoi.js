@@ -336,7 +336,13 @@ function findVoronoiCell(point) {
 	//  \   /   \   /
 	//   \ /  4  \ /
 	//    ---------
-
+	
+	// Input validation
+	if (!point || !point.lastEdgeConnected || !point.lastEdgeConnected.edges) {
+		console.error("Invalid input point");
+		return null;
+	}
+	
 	let currentEdge = point.lastEdgeConnected;
 	if (
 		currentEdge === null ||
@@ -358,9 +364,17 @@ function findVoronoiCell(point) {
 	let iterationCount = 0;
 
 	// Go through (1) each edge connected to the point and (2) each triangle surrounding the point.
-	while (currentTriangle.center !== firstPoint && iterationCount++ < MAX_ITERATIONS) {
+	while (currentTriangle.center !== firstPoint) {
+		if (iterationCount >= MAX_ITERATIONS) {
+			break;
+		}
+		iterationCount++;
+
+		const edgeCount = 3;
 		let i = 0;
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < edgeCount; i++) {
+			if (i >= edgeCount) break;
+
 			if (
 				currentEdge !== currentTriangle.edges[i] &&
 				(currentTriangle.edges[i].p1 === point ||

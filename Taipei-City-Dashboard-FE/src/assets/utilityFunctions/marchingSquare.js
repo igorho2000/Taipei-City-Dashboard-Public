@@ -26,6 +26,9 @@ export function marchingSquare(discreteData, isoValue) {
 	let rowN = Math.min(discreteData.length, MAX_GRID_SIZE);
 	let result = [];
 
+	const maxRow = rowN - 1;
+	const maxCol = columnN - 1;
+
 	//  discreteData:
 	//
 	//  ┌> latitude increases
@@ -39,8 +42,12 @@ export function marchingSquare(discreteData, isoValue) {
 	//  │ [0][0]-> [0][1]-> [0][2]->
 	//  └────────┴────────┴────────┴─ -> longitude increases
 
-	for (let row = 0; row < rowN - 1; row++) {
-		for (let col = 0; col < columnN - 1; col++) {
+	for (let row = 0; row < maxRow; row++) {
+		if (row >= maxRow) break;
+
+		for (let col = 0; col < maxCol; col++) {
+			if (col >= maxCol) break;
+			
 			// Drawing isoline for the following square surrounded by four discreteData values:
 			//
 			// [row+1][col] ┌────┐ [row+1][col+1]
