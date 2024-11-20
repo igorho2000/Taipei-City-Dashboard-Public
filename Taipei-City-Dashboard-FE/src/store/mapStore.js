@@ -554,17 +554,19 @@ export const useMapStore = defineStore("map", {
 			// Limit the number of iterations
 			const MAX_ITERATIONS = 1000;
 
-			if (cells.length < MAX_ITERATIONS) {
-				// Push cell outlines to source data
-				for (let i = 0; i < cells.length; i++) {
-					voronoi_source.features.push({
-						...features[i],
-						geometry: {
-							type: "LineString",
-							coordinates: cells[i],
-						},
-					});
-				}
+			if (!cells) return;
+
+			// Push cell outlines to source data
+			for (let i = 0; i < cells.length; i++) {
+				if (i >= MAX_ITERATIONS) break;
+
+				voronoi_source.features.push({
+					...features[i],
+					geometry: {
+						type: "LineString",
+						coordinates: cells[i],
+					},
+				});
 			}
 
 			// Add source and layer
@@ -816,8 +818,12 @@ export const useMapStore = defineStore("map", {
 			const bearing = this.map.getBearing();
 
 			const authStore = useAuthStore();
+			const baseUrl = "user";
+			const midUrl = "viewpoint";
+			const userId = authStore.user.user_id;
+			
 			const res = await http.post(
-				`user/${authStore.user.user_id}/viewpoint`,
+				`${baseUrl}/${userId}/${midUrl}`,
 				{
 					center_x: lng,
 					center_y: lat,
@@ -833,8 +839,12 @@ export const useMapStore = defineStore("map", {
 		// 2. Add a marker
 		async addMarker(name) {
 			const authStore = useAuthStore();
+			const baseUrl = "user";
+			const midUrl = "viewpoint";
+			const userId = authStore.user.user_id;
+
 			const res = await http.post(
-				`user/${authStore.user.user_id}/viewpoint`,
+				`${baseUrl}/${userId}/${midUrl}`,
 				{
 					center_x: this.tempMarkerCoordinates.lng,
 					center_y: this.tempMarkerCoordinates.lat,
@@ -876,8 +886,12 @@ export const useMapStore = defineStore("map", {
 			popup.on("open", () => {
 				const el = document.getElementById(`delete-${markerId}`);
 				el.addEventListener("click", async () => {
+					const baseUrl = "user";
+					const midUrl = "viewpoint";
+					const userId = authStore.user.user_id;
+
 					await http.delete(
-						`user/${authStore.user.user_id}/viewpoint/${markerId}`
+						`${baseUrl}/${userId}/${midUrl}/${markerId}`
 					);
 					dialogStore.showNotification("success", "地標刪除成功");
 					this.viewPoints = this.viewPoints.filter(
@@ -894,8 +908,12 @@ export const useMapStore = defineStore("map", {
 		// 4. Remove a viewpoint
 		async removeViewPoint(item) {
 			const authStore = useAuthStore();
+			const baseUrl = "user";
+			const midUrl = "viewpoint";
+			const userId = authStore.user.user_id;
+
 			await http.delete(
-				`user/${authStore.user.user_id}/viewpoint/${item.id}`
+				`${baseUrl}/${userId}/${midUrl}/${item.id}`
 			);
 			const dialogStore = useDialogStore();
 
@@ -907,9 +925,12 @@ export const useMapStore = defineStore("map", {
 		// 5. Fetch all view points
 		async fetchViewPoints() {
 			const authStore = useAuthStore();
+			const baseUrl = "user";
+			const midUrl = "viewpoint";
+			const userId = authStore.user.user_id;
 
 			const res = await http.get(
-				`user/${authStore.user.user_id}/viewpoint`
+				`${baseUrl}/${userId}/${midUrl}`
 			);
 			this.viewPoints = res.data;
 			if (this.map) this.renderMarkers();
