@@ -60,7 +60,7 @@ function handleFind() {
       <h2>尋找最近點</h2>
       <div class="findclosestpoint-input">
         <label>
-          請選擇搜尋基準點{{ authStore.accessKey && " (用戶定位與地標)" }}
+          請選擇搜尋基準點{{ authStore.code && " (用戶定位與地標)" }}
         </label>
         <div
           v-if="availableLocations.length > 0"
@@ -85,7 +85,7 @@ function handleFind() {
         <div v-else>
           <p>
             查無基準點。請點擊地圖右上角按紐，開啟定位功能{{
-              authStore.accessKey && "或加入地標"
+              authStore.code && "或加入地標"
             }}。
           </p>
         </div>

@@ -109,7 +109,7 @@ function getLinkTag(link, index) {
         </div>
         <div class="moreinfo-info-control">
           <button
-            v-if="authStore.accessKey"
+            v-if="authStore.code"
             @click="
               dialogStore.showReportIssue(
                 dialogStore.moreInfoContent.id,
