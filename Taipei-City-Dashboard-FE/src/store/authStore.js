@@ -27,8 +27,8 @@ export const useAuthStore = defineStore("auth", {
 			is_admin: false,
 		},
 		editUser: {},
-		accessKey: null,
-		taipeiPass: null,
+		code: null,
+		isso_code: null,
 		errorMessage: "",
 		isMobileDevice: false,
 		isNarrowDevice: false,
@@ -45,10 +45,10 @@ export const useAuthStore = defineStore("auth", {
 			this.checkIfMobile();
 
 			// Check if the user is logged in
-			if (localStorage.getItem("accessKey")) {
-				this.accessKey = localStorage.getItem("accessKey");
-				if (localStorage.getItem("taipeiPass")) {
-					this.taipeiPass = localStorage.getItem("taipeiPass");
+			if (localStorage.getItem("code")) {
+				this.code = localStorage.getItem("code");
+				if (localStorage.getItem("isso_code")) {
+					this.isso_code = localStorage.getItem("isso_code");
 				}
 				const response = await http.get("/user/me");
 				this.user = response.data.user;
@@ -103,12 +103,12 @@ export const useAuthStore = defineStore("auth", {
 
 			const dataManager = new DataManager(response.data);
 
-			this.accessKey = dataManager.getData("data");
-			localStorage.setItem("accessKey", this.accessKey);
+			this.code = dataManager.getData("data");
+			localStorage.setItem("code", this.code);
 
-			if (dataManager.getData("taipeiPass")) {
-				this.taipeiPass = dataManager.getData("taipeiPass");
-				localStorage.setItem("taipeiPass", this.taipeiPass);
+			if (dataManager.getData("isso_code")) {
+				this.isso_code = dataManager.getData("isso_code");
+				localStorage.setItem("isso_code", this.isso_code);
 			}
 			
 			this.user = dataManager.getData("person");
@@ -123,25 +123,25 @@ export const useAuthStore = defineStore("auth", {
 			const dialogStore = useDialogStore();
 			const contentStore = useContentStore();
 
-			localStorage.removeItem("accessKey");
+			localStorage.removeItem("code");
 			this.user = {};
 			this.editUser = {};
-			this.accessKey = null;
+			this.code = null;
 
 			contentStore.publicDashboards = [];
 
-			if (this.taipeiPass) {
+			if (this.isso_code) {
 				await http.post(
 					"/auth/logout",
 					{},
 					{
 						params: {
-							isso_token: this.taipeiPass,
+							isso_token: this.isso_code,
 						},
 					}
 				);
-				localStorage.removeItem("taipeiPass");
-				this.taipeiPass = null;
+				localStorage.removeItem("isso_code");
+				this.isso_code = null;
 			}
 
 			router.go();

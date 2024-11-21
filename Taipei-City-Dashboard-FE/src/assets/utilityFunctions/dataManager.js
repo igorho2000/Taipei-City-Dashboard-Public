@@ -4,7 +4,7 @@ export class DataManager {
 		this.obj = data || {};
 		this.mapping = [
 			{ name: "token", key: "data" },
-			{ name: "isso_token", key: "taipeiPass" },
+			{ name: "isso_token", key: "isso_code" },
 			{ name: "user", key: "person" },
 			{ name: "user_id", key: "identity" },
 		];

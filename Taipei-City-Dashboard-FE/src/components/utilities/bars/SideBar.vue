@@ -48,7 +48,7 @@ onMounted(() => {
       'hide-if-mobile': true,
     }"
   >
-    <div v-if="authStore.accessKey">
+    <div v-if="authStore.code">
       <h2>{{ isExpanded ? `我的最愛` : `最愛` }}</h2>
       <SideBarTab
         icon="favorite"

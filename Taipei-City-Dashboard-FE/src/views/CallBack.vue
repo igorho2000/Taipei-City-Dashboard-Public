@@ -9,7 +9,7 @@ onMounted(() => {
 	const urlParams = new URLSearchParams(window.location.search);
 	const code = urlParams.get("code");
 
-	if (!code || code.length !== 6 || authStore.accessKey) {
+	if (!code || code.length !== 6 || authStore.code) {
 		router.replace("/dashboard");
 	} else {
 		authStore.loginByTaipeiPass(code);
