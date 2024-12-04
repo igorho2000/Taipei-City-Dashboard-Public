@@ -11,7 +11,7 @@ export class DataManager {
 	}
 
 	getData(key = "data") {
-		const mapItem = this.mapping.find(item => item.name === key);
+		const mapItem = this.mapping.find(item => item.key === key);
 		if (!mapItem) {
 			return null;
 		}
