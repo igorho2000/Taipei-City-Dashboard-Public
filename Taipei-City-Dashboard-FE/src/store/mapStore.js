@@ -17,7 +17,7 @@ import axios from "axios";
 import http from "../router/axios.js";
 
 // Other Stores
-import { useAuthStore } from "./authStore";
+import { usePersonStore } from "./personStore.js";
 import { useDialogStore } from "./dialogStore";
 
 // Vue Components
@@ -127,7 +127,7 @@ export const useMapStore = defineStore("map", {
 		// 2. Adds three basic layers to the map (Taipei District, Taipei Village labels, and Taipei 3D Buildings)
 		// Due to performance concerns, Taipei 3D Buildings won't be added in the mobile version
 		initializeBasicLayers() {
-			const authStore = useAuthStore();
+			const personStore = usePersonStore();
 			if (!this.map) return;
 			// Taipei District Labels
 			fetch(`/mapData/taipei_town.geojson`)
@@ -152,7 +152,7 @@ export const useMapStore = defineStore("map", {
 						.addLayer(TaipeiVillage);
 				});
 			// Taipei 3D Buildings
-			if (!authStore.isMobileDevice) {
+			if (!personStore.isMobileDevice) {
 				this.map
 					.addSource("taipei_building_3d_source", {
 						type: "vector",
@@ -291,6 +291,12 @@ export const useMapStore = defineStore("map", {
 		},
 		// 3-1. Add a local geojson as a source in mapbox
 		addGeojsonSource(map_config, data) {
+			// 驗證 data.features
+			if (!data || !data.features || !Array.isArray(data.features)) {
+				console.error('Invalid data received: Features array is required');
+				return;
+			}
+
 			if (!["voronoi", "isoline"].includes(map_config.type)) {
 				this.map.addSource(`${map_config.layerId}-source`, {
 					type: "geojson",
@@ -309,10 +315,22 @@ export const useMapStore = defineStore("map", {
 		},
 		// 3-2. Add a raster map as a source in mapbox
 		async addRasterSource(map_config) {
+			// 驗證 map_config
+			if (!map_config || typeof map_config !== 'object') {
+				console.error("Invalid map_config in addRasterSource");
+				return;
+			}
+
 			if (["arc", "voronoi", "isoline"].includes(map_config.type)) {
 				const res = await axios.get(
 					`${location.origin}/geo_server/taipei_vioc/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=taipei_vioc%3A${map_config.index}&maxFeatures=1000000&outputFormat=application%2Fjson`
 				);
+
+				// 驗證 res.data
+				if (!res.data || !res.data.features || !Array.isArray(res.data.features)) {
+					console.error('Invalid data received from the server');
+					return;
+				}
 
 				if (map_config.type === "arc") {
 					this.map.addSource(`${map_config.layerId}-source`, {
@@ -518,6 +536,12 @@ export const useMapStore = defineStore("map", {
 		// 4-3. Add Map Layer for Voronoi Maps
 		// Developed by 00:21, Taipei Codefest 2023
 		AddVoronoiMapLayer(map_config, data) {
+			// 驗證 data 和 features
+			if (!data || !Array.isArray(data.features)) {
+				console.error("Invalid data structure");
+				return;
+			}
+
 			this.loadingLayers.push("rendering");
 
 			let voronoi_source = {
@@ -531,8 +555,14 @@ export const useMapStore = defineStore("map", {
 
 			// Get coordnates alone
 			let coords = features.map(
-				(location) => location.geometry.coordinates
+				(location) => location.geometry?.coordinates
 			);
+
+			// 驗證 coords 是否為有效的數組
+			if (!Array.isArray(coords)) {
+				console.error("Invalid coordinates data");
+				return;
+			}
 
 			// Remove duplicate coordinates (so that they wont't cause problems in the Voronoi algorithm...)
 			let shouldBeRemoved = coords.map((coord1, ind) => {
@@ -554,7 +584,11 @@ export const useMapStore = defineStore("map", {
 			// Limit the number of iterations
 			const MAX_ITERATIONS = 1000;
 
-			if (!cells) return;
+			// 驗證 cells 是否為有效的數組
+			if (!Array.isArray(cells)) {
+				console.error("Invalid cells data");
+				return;
+			}
 
 			// Push cell outlines to source data
 			for (let i = 0; i < cells.length; i++) {
@@ -583,6 +617,11 @@ export const useMapStore = defineStore("map", {
 		// 4-4. Add Map Layer for Isoline Maps
 		// Developed by 00:21, Taipei Codefest 2023
 		AddIsolineMapLayer(map_config, data) {
+			// 驗證輸入資料
+			if (!data || !Array.isArray(data.features)) {
+				console.error("Invalid data structure");
+				return;
+			}
 			this.loadingLayers.push("rendering");
 			// Step 1: Generate a 2D scalar field from known data points
 			// - Turn the original data into the format that can be accepted by interpolation()
@@ -604,14 +643,18 @@ export const useMapStore = defineStore("map", {
 			let latEnd = 25.21811;
 
 			let targetPoints = [];
+
+			// 限制 grid 大小
+			const MAX_GRID_SIZE = 1000;
+
 			let gridSize = 0.001;
 			let rowN = 0;
 			let colN = 0;
 
 			// - Generate target point coordinates
-			for (let i = latStart; i <= latEnd; i += gridSize, rowN += 1) {
+			for (let i = latStart; i <= latEnd && rowN < MAX_GRID_SIZE; i += gridSize, rowN += 1) {
 				colN = 0;
-				for (let j = lngStart; j <= lngEnd; j += gridSize, colN += 1) {
+				for (let j = lngStart; j <= lngEnd && colN < MAX_GRID_SIZE; j += gridSize, colN += 1) {
 					targetPoints.push({ x: j, y: i });
 				}
 			}
@@ -622,9 +665,9 @@ export const useMapStore = defineStore("map", {
 			// Step 2: Calculate isolines from the 2D scalar field
 			// - Turn the interpolation result into the format that can be accepted by marchingSquare()
 			let discreteData = [];
-			for (let y = 0; y < rowN; y++) {
+			for (let y = 0; y < Math.min(rowN, MAX_GRID_SIZE); y++) {
 				discreteData.push([]);
-				for (let x = 0; x < colN; x++) {
+				for (let x = 0; x < Math.min(colN, MAX_GRID_SIZE); x++) {
 					discreteData[y].push(interpolationResult[y * colN + x]);
 				}
 			}
@@ -817,10 +860,10 @@ export const useMapStore = defineStore("map", {
 			const pitch = this.map.getPitch();
 			const bearing = this.map.getBearing();
 
-			const authStore = useAuthStore();
+			const personStore = usePersonStore();
 			const baseUrl = "user";
 			const midUrl = "viewpoint";
-			const userId = authStore.user.user_id;
+			const userId = personStore.person.person_id;
 			
 			const res = await http.post(
 				`${baseUrl}/${userId}/${midUrl}`,
@@ -838,10 +881,10 @@ export const useMapStore = defineStore("map", {
 		},
 		// 2. Add a marker
 		async addMarker(name) {
-			const authStore = useAuthStore();
+			const personStore = usePersonStore();
 			const baseUrl = "user";
 			const midUrl = "viewpoint";
-			const userId = authStore.user.user_id;
+			const userId = personStore.person.person_id;
 
 			const res = await http.post(
 				`${baseUrl}/${userId}/${midUrl}`,
@@ -874,7 +917,7 @@ export const useMapStore = defineStore("map", {
 			markerId,
 			{ lng, lat }
 		) {
-			const authStore = useAuthStore();
+			const personStore = usePersonStore();
 			const dialogStore = useDialogStore();
 			const marker = new mapboxGl.Marker(colorSetting);
 			const popup = new mapboxGl.Popup({ closeButton: false }).setHTML(
@@ -888,7 +931,7 @@ export const useMapStore = defineStore("map", {
 				el.addEventListener("click", async () => {
 					const baseUrl = "user";
 					const midUrl = "viewpoint";
-					const userId = authStore.user.user_id;
+					const userId = personStore.person.person_id;
 
 					await http.delete(
 						`${baseUrl}/${userId}/${midUrl}/${markerId}`
@@ -907,10 +950,10 @@ export const useMapStore = defineStore("map", {
 		},
 		// 4. Remove a viewpoint
 		async removeViewPoint(item) {
-			const authStore = useAuthStore();
+			const personStore = usePersonStore();
 			const baseUrl = "user";
 			const midUrl = "viewpoint";
-			const userId = authStore.user.user_id;
+			const userId = personStore.person.person_id;
 
 			await http.delete(
 				`${baseUrl}/${userId}/${midUrl}/${item.id}`
@@ -924,10 +967,10 @@ export const useMapStore = defineStore("map", {
 		},
 		// 5. Fetch all view points
 		async fetchViewPoints() {
-			const authStore = useAuthStore();
+			const personStore = usePersonStore();
 			const baseUrl = "user";
 			const midUrl = "viewpoint";
-			const userId = authStore.user.user_id;
+			const userId = personStore.person.person_id;
 
 			const res = await http.get(
 				`${baseUrl}/${userId}/${midUrl}`

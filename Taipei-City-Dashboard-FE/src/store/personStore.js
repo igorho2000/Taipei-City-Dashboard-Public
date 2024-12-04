@@ -1,10 +1,5 @@
 // Developed by Taipei Urban Intelligence Center 2023-2024
 
-/* authStore */
-/*
-The authStore stores authentication and user information.
-*/
-
 import { defineStore } from "pinia";
 import http from "../router/axios";
 import router from "../router/index";
@@ -13,11 +8,10 @@ import { useDialogStore } from "./dialogStore";
 import { useMapStore } from "./mapStore";
 import { DataManager } from "../assets/utilityFunctions/dataManager.js";
 
-export const useAuthStore = defineStore("auth", {
+export const usePersonStore = defineStore("auth", {
 	state: () => ({
-		// This is a shortened version of the user object Taipei City Dashboard's backend will return once authenticated
-		user: {
-			user_id: null,
+		person: {
+			person_id: null,
 			account: "",
 			name: "",
 			is_active: null,
@@ -28,7 +22,7 @@ export const useAuthStore = defineStore("auth", {
 		},
 		editUser: {},
 		code: null,
-		isso_code: null,
+		taipei_code: null,
 		errorMessage: "",
 		isMobileDevice: false,
 		isNarrowDevice: false,
@@ -47,15 +41,15 @@ export const useAuthStore = defineStore("auth", {
 			// Check if the user is logged in
 			if (localStorage.getItem("code")) {
 				this.code = localStorage.getItem("code");
-				if (localStorage.getItem("isso_code")) {
-					this.isso_code = localStorage.getItem("isso_code");
+				if (localStorage.getItem("taipei_code")) {
+					this.taipei_code = localStorage.getItem("taipei_code");
 				}
 				const response = await http.get("/user/me");
-				this.user = response.data.user;
-				if (this.user?.user_id) {
+				this.person = response.data.user;
+				if (this.person?.person_id) {
 					mapStore.fetchViewPoints();
 				}
-				this.editUser = JSON.parse(JSON.stringify(this.user));
+				this.editUser = JSON.parse(JSON.stringify(this.person));
 			}
 
 			contentStore.setContributors();
@@ -106,13 +100,13 @@ export const useAuthStore = defineStore("auth", {
 			this.code = dataManager.getData("data");
 			localStorage.setItem("code", this.code);
 
-			if (dataManager.getData("isso_code")) {
-				this.isso_code = dataManager.getData("isso_code");
-				localStorage.setItem("isso_code", this.isso_code);
+			if (dataManager.getData("taipei_code")) {
+				this.taipei_code = dataManager.getData("taipei_code");
+				localStorage.setItem("taipei_code", this.taipei_code);
 			}
 			
-			this.user = dataManager.getData("person");
-			this.editUser = JSON.parse(JSON.stringify(this.user));
+			this.person = dataManager.getData("person");
+			this.editUser = JSON.parse(JSON.stringify(this.person));
 
 			contentStore.publicDashboards = [];
 			router.go();
@@ -124,24 +118,24 @@ export const useAuthStore = defineStore("auth", {
 			const contentStore = useContentStore();
 
 			localStorage.removeItem("code");
-			this.user = {};
+			this.person = {};
 			this.editUser = {};
 			this.code = null;
 
 			contentStore.publicDashboards = [];
 
-			if (this.isso_code) {
+			if (this.taipei_code) {
 				await http.post(
 					"/auth/logout",
 					{},
 					{
 						params: {
-							isso_token: this.isso_code,
+							isso_token: this.taipei_code,
 						},
 					}
 				);
-				localStorage.removeItem("isso_code");
-				this.isso_code = null;
+				localStorage.removeItem("taipei_code");
+				this.taipei_code = null;
 			}
 
 			router.go();
@@ -155,8 +149,8 @@ export const useAuthStore = defineStore("auth", {
 		async updateUserInfo() {
 			await http.patch("/user/me", this.editUser);
 			const response = await http.get("/user/me");
-			this.user = response.data.user;
-			this.editUser = JSON.parse(JSON.stringify(this.user));
+			this.person = response.data.user;
+			this.editUser = JSON.parse(JSON.stringify(this.person));
 		},
 
 		/* Other Utility Functions */

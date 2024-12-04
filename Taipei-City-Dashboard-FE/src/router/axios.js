@@ -4,7 +4,7 @@
 // This file centrally handles all axios requests made in the application.
 
 import axios from "axios";
-import { useAuthStore } from "../store/authStore";
+import { usePersonStore } from "../store/personStore.js";
 import { useDialogStore } from "../store/dialogStore";
 import { useContentStore } from "../store/contentStore";
 import { DataManager } from "../assets/utilityFunctions/dataManager.js";
@@ -18,14 +18,14 @@ const http = axios.create({
 
 // Request Handler
 http.interceptors.request.use((request) => {
-	const authStore = useAuthStore();
+	const personStore = usePersonStore();
 	const contentStore = useContentStore();
 
 	contentStore.loading = true;
 	contentStore.error = false;
 
-	if (authStore.code) {
-		request.headers.setAuthorization(`Bearer ${authStore.code}`);
+	if (personStore.code) {
+		request.headers.setAuthorization(`Bearer ${personStore.code}`);
 	} else {
 		request.headers.setAuthorization(`Bearer`);
 	}
@@ -36,18 +36,18 @@ http.interceptors.request.use((request) => {
 http.interceptors.response.use(
 	(response) => {
 		// handle loading directly in request since sometimes requests are stringed together
-		const authStore = useAuthStore();
+		const personStore = usePersonStore();
 		const dataManager = new DataManager(response.data);
 
 		if (dataManager.getData("data")) {
-			authStore.code = dataManager.getData("data");
-			localStorage.setItem("code", authStore.code);
+			personStore.code = dataManager.getData("data");
+			localStorage.setItem("code", personStore.code);
 		}
 		return response;
 	},
 	(error) => {
 		const dialogStore = useDialogStore();
-		const authStore = useAuthStore();
+		const personStore = usePersonStore();
 		const contentStore = useContentStore();
 
 		contentStore.error = true;
@@ -55,12 +55,12 @@ http.interceptors.response.use(
 
 		switch (error.response.status) {
 			case 401:
-				if (authStore.code) {
+				if (personStore.code) {
 					dialogStore.showNotification(
 						"fail",
 						"401，登入逾時，請重新登入"
 					);
-					authStore.handleLogout();
+					personStore.handleLogout();
 				} else {
 					dialogStore.showNotification(
 						"fail",
@@ -69,7 +69,7 @@ http.interceptors.response.use(
 				}
 				break;
 			case 403:
-				if (authStore.code) {
+				if (personStore.code) {
 					dialogStore.showNotification(
 						"fail",
 						"403，沒有權限執行此動作"
