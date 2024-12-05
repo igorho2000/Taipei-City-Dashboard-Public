@@ -17,6 +17,7 @@ from utils.transform_geometry import add_point_wkbgeometry_column_to_df
 from utils.transform_time import convert_str_to_time_format
 
 
+dag_id = "env_srv_energy_subsidy"
 
 
 def _transfer(**kwargs):
