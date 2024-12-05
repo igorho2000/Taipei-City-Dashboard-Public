@@ -112,5 +112,5 @@ def _R0087(**kwargs):
     )
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="R0087")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="R0087")
 dag.create_dag(etl_func=_R0087)

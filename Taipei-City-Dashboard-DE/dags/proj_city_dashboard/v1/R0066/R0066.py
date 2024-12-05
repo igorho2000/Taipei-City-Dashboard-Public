@@ -15,5 +15,5 @@ def _R0066(**kwargs):
     renew_etl(URL, FROM_CRS, GEOMETRY_TYPE, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="R0066")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="R0066")
 dag.create_dag(etl_func=_R0066)

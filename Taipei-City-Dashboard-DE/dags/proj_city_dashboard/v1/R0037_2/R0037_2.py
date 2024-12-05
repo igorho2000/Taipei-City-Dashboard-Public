@@ -13,5 +13,5 @@ def _R0037_2(**kwargs):
     flood_etl(URL, PAGE_RANK, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="R0037_2")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="R0037_2")
 dag.create_dag(etl_func=_R0037_2)

@@ -1,7 +1,7 @@
 from airflow import DAG
 from operators.common_pipeline import CommonDag
 
-PROJ_FOLDER = "proj_city_dashboard"
+PROJ_FOLDER = "proj_city_dashboard/v1"
 
 # 加一段回填資料
 
