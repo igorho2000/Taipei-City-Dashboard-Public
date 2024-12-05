@@ -157,5 +157,5 @@ def D050303_7(**kwargs):
         engine, airflow_dag_id=dag_id, lasttime_in_data=lasttime_in_data
     )
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D050303_7")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D050303_7")
 dag.create_dag(etl_func=D050303_7)

@@ -14,5 +14,5 @@ def _R0025(**kwargs):
     crime_etl(URL, ENCODING, FROM_CRS, GEOMETRY_TYPE, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="R0025")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="R0025")
 dag.create_dag(etl_func=_R0025)

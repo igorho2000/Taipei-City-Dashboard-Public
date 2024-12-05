@@ -10,5 +10,5 @@ def D040302_1(**kwargs):
     today_road_use_etl(URL, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D040302_1")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D040302_1")
 dag.create_dag(etl_func=D040302_1)

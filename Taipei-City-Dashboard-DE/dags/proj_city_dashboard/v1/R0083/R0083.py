@@ -62,5 +62,5 @@ def _R0083(**kwargs):
     )
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="R0083")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="R0083")
 dag.create_dag(etl_func=_R0083)

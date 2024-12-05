@@ -96,5 +96,5 @@ def _D050201_1(**kwargs):
     update_lasttime_in_data_to_dataset_info(engine, dag_id, lasttime_in_data)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D050201_1")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D050201_1")
 dag.create_dag(etl_func=_D050201_1)

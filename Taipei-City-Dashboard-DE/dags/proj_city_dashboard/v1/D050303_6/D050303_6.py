@@ -13,5 +13,5 @@ def D050303_6(**kwargs):
     pavement_etl(file_name, web_url, page_id, rank_index, geometry_type, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D050303_6")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D050303_6")
 dag.create_dag(etl_func=D050303_6)

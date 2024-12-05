@@ -12,5 +12,5 @@ def D100102_8(**kwargs):
     childcare_etl(RID, PAGE_ID, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D100102_8")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D100102_8")
 dag.create_dag(etl_func=D100102_8)

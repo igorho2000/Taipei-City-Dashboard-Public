@@ -17,5 +17,5 @@ def _D050302_3(**kwargs):
     green_land_etl(GREEN_LAND_TYPE, URL, PAGE_RANK, GEOMETRY_TYPE, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D050302_3")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D050302_3")
 dag.create_dag(etl_func=_D050302_3)

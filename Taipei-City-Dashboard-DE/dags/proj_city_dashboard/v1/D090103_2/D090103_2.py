@@ -15,5 +15,5 @@ def _D090103_2(**kwargs):
     vil_of_school_dist_etl(RID, SCHOOL_DIST_COL, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D090103_2")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D090103_2")
 dag.create_dag(etl_func=_D090103_2)

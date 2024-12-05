@@ -11,5 +11,5 @@ def _D080101(**kwargs):
     cdc_visit_case_etl(URL, DIEASE_NAME, **kwargs)
 
 
-dag = CommonDag(proj_folder="proj_city_dashboard", dag_folder="D080101")
+dag = CommonDag(proj_folder="proj_city_dashboard/v1", dag_folder="D080101")
 dag.create_dag(etl_func=_D080101)
