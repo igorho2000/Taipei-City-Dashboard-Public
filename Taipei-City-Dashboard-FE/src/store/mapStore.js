@@ -295,6 +295,13 @@ export const useMapStore = defineStore("map", {
 						console.error("Invalid data structure");
 						return;
 					}
+
+					const MAX_GRID_SIZE = 1000;
+					
+					if(rs?.data.length > MAX_GRID_SIZE){
+						return
+					}
+
 					this.addGeojsonSource(map_config, rs?.data);
 				})
 				.catch((e) => console.error(e));
