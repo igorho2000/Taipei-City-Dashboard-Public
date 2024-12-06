@@ -296,8 +296,12 @@ export const useMapStore = defineStore("map", {
 		// 3-1. Add a local geojson as a source in mapbox
 		addGeojsonSource(map_config, data) {
 			// 驗證 data.features
-			if (!data || !data.features || !Array.isArray(data.features)) {
-				console.error('Invalid data received: Features array is required');
+			if (!Array.isArray(data) ||data == null || data?.length==0 ) {
+				console.error("Invalid data structure");
+				return;
+			}
+			
+			if (!Array.isArray(data.features)||data.features == null || data.features?.length==0 ) {
 				return;
 			}
 
