@@ -296,13 +296,6 @@ export const useMapStore = defineStore("map", {
 						return;
 					}
 
-					// 限制處理的特徵數量
-					const MAX_FEATURES = 10000; // 設置一個合理的上限
-					if (rs.data.features.length > MAX_FEATURES) {
-						console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
-						rs.data.features = rs.data.features.slice(0, MAX_FEATURES);
-					}
-
 					this.addGeojsonSource(map_config, rs?.data);
 				})
 				.catch((e) => console.error(e));
@@ -318,14 +311,6 @@ export const useMapStore = defineStore("map", {
 			if (!Array.isArray(data.features)||data.features == null || data.features?.length==0 ) {
 				return;
 			}
-
-			// 限制處理的特徵數量
-			const MAX_FEATURES = 10000; // 設置一個合理的上限
-			if (data.features.length > MAX_FEATURES) {
-				console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
-				data.features = data.features.slice(0, MAX_FEATURES);
-			}
-
 
 			if (!["voronoi", "isoline"].includes(map_config.type)) {
 				this.map.addSource(`${map_config.layerId}-source`, {
@@ -601,13 +586,6 @@ export const useMapStore = defineStore("map", {
 				return;
 			}
 
-			// 限制處理的特徵數量
-			const MAX_FEATURES = 10000; // 設置一個合理的上限
-			if (features.length > MAX_FEATURES) {
-				console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
-				features = features.slice(0, MAX_FEATURES);
-			}
-
 			// Get coordnates alone
 			let coords = features.map(
 				(location) => location.geometry?.coordinates
@@ -637,7 +615,8 @@ export const useMapStore = defineStore("map", {
 			let cells = voronoi(coords);
 			
 			// Limit the number of iterations
-			const MAX_ITERATIONS = 1000;
+			const MAX_ITERATIONS = 100000;
+			const MAX_ITERATIONS_lENGTH = Math.min(cells.length, MAX_ITERATIONS);
 
 			// 驗證 cells 是否為有效的數組
 			if (!Array.isArray(cells)) {
@@ -646,9 +625,7 @@ export const useMapStore = defineStore("map", {
 			}
 
 			// Push cell outlines to source data
-			for (let i = 0; i < MAX_ITERATIONS; i++) {
-				if (i >= MAX_ITERATIONS) break;
-
+			for (let i = 0; i < MAX_ITERATIONS_lENGTH; i++) {
 				voronoi_source.features.push({
 					...features[i],
 					geometry: {
