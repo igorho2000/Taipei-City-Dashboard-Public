@@ -646,7 +646,7 @@ export const useMapStore = defineStore("map", {
 			}
 
 			// Push cell outlines to source data
-			for (let i = 0; i < cells.length; i++) {
+			for (let i = 0; i < MAX_ITERATIONS; i++) {
 				if (i >= MAX_ITERATIONS) break;
 
 				voronoi_source.features.push({
