@@ -20,7 +20,7 @@ def _R0054(**kwargs):
 
     def _read_mapping_dict():
         mapping_table = pd.read_csv(
-            f"{DAG_PATH}/proj_city_dashboard/R0054/land_plan_mapping_table.csv",
+            f"{DAG_PATH}/proj_city_dashboard/v1/R0054/land_plan_mapping_table.csv",
             encoding="utf-8",
         )
         mapping_dict = {
