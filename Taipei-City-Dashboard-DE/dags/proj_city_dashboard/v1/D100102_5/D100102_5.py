@@ -1,6 +1,6 @@
 from airflow import DAG
 from operators.common_pipeline import CommonDag
-from proj_city_dashboard.D100102_1.childcare_etl import childcare_etl
+from proj_city_dashboard.v1.D100102_1.childcare_etl import childcare_etl
 
 
 def D100102_5(**kwargs):

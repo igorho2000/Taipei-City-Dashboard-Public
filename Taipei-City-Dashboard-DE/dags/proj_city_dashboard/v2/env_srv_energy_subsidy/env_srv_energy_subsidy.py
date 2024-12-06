@@ -7,6 +7,7 @@ from utils.load_stage import (
     save_geodataframe_to_postgresql,
     update_lasttime_in_data_to_dataset_info,
 )
+import datetime.datetime as datetime
 from utils.transform_address import (
     clean_data,
     get_addr_xy_parallel,
@@ -37,36 +38,35 @@ def _transfer(**kwargs):
     FROM_CRS = 4326
     GEOMETRY_TYPE = "Point"
 
-    # Extract
+    ##############
+    ## Extract
+    ##############
     raw_list = get_data_taipei_api(RID)
     raw_data = pd.DataFrame(raw_list)
-    raw_data["data_time"] = raw_data["_importdate"].iloc[0]["date"]
+    # raw_data["data_time"] = raw_data["_importdate"].iloc[0]["date"]
     
+    raw_data["etl_dtm"] = datetime.now()
     print(raw_data)
 
-    # Transform
-    # data = raw_data.copy()
-    # # rename
-    # data = data.rename(
-    #     columns={
-    #         "地址": "address",
-    #         "面積": "area",
-    #         "容留人數": "person_capacity",
-    #         "無障礙設施": "is_accessible",
-    #         "data_time": "data_time",
-    #     }
-    # )
-    # # drop wierd rows
-    # data = data.dropna(subset="area")
-    # # define columns
-    # data["area"] = pd.to_numeric(data["area"], errors="coerce")
-    # data["person_capacity"] = pd.to_numeric(data["person_capacity"], errors="coerce")
-    # # convert to bool
-    # data["is_accessible"] = data["is_accessible"].apply(
-    #     lambda x: True if x == "有" else False
-    # )
+    ##############
+    ## Transform
+    ##############
+    data = raw_data.copy()
+    # rename
+    data = data.rename(
+        columns={
+            "年度": "data_year",
+            "核撥件數": "num_of_approval",
+            "累積核撥件數": "acc_num_of_approval",
+            "補助金額": "subsidy_amt",
+            "累計補助金額": "acc_subsidy_amt",
+            "節電量": "enegry_saving_amt",
+            "累積節電量": "acc_enegry_saving_amt",
+        }
+    )
+
     # # standardize time
-    # data["data_time"] = convert_str_to_time_format(data["data_time"])
+    # data["etl_dtm"] = convert_str_to_time_format(data["etl_dtm"])
     # # geocoding
     # addr = data["address"]
     # addr_cleaned = clean_data(addr)
@@ -88,31 +88,33 @@ def _transfer(**kwargs):
     # gdata = add_point_wkbgeometry_column_to_df(
     #     data, data["lng"], data["lat"], from_crs=FROM_CRS
     # )
-    # # select columns
-    # ready_data = gdata[
-    #     [
-    #         "data_time",
-    #         "town",
-    #         "address",
-    #         "area",
-    #         "person_capacity",
-    #         "is_accessible",
-    #         "lng",
-    #         "lat",
-    #         "wkb_geometry",
-    #     ]
-    # ]
 
-    # # Load
-    # engine = create_engine(ready_data_db_uri)
-    # save_geodataframe_to_postgresql(
-    #     engine,
-    #     gdata=ready_data,
-    #     load_behavior=load_behavior,
-    #     default_table=default_table,
-    #     history_table=history_table,
-    #     geometry_type=GEOMETRY_TYPE,
-    # )
+
+    # select columns
+    ready_data = gdata[
+        [
+            "data_time",
+            "town",
+            "address",
+            "area",
+            "person_capacity",
+            "is_accessible",
+            "lng",
+            "lat",
+            "wkb_geometry",
+        ]
+    ]
+
+    # Load
+    engine = create_engine(ready_data_db_uri)
+    save_dataframe_to_postgresql(
+        engine,
+        gdata=ready_data,
+        load_behavior=load_behavior,
+        default_table=default_table,
+        history_table=history_table,
+        # geometry_type=GEOMETRY_TYPE,
+    )
     # lasttime_in_data = data["data_time"].max()
     # update_lasttime_in_data_to_dataset_info(engine, dag_id, lasttime_in_data)
 
