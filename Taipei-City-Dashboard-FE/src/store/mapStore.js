@@ -296,6 +296,13 @@ export const useMapStore = defineStore("map", {
 						return;
 					}
 
+					// 限制處理的特徵數量
+					const MAX_FEATURES = 10000; // 設置一個合理的上限
+					if (rs.data.features.length > MAX_FEATURES) {
+						console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
+						rs.data.features = rs.data.features.slice(0, MAX_FEATURES);
+					}
+
 					this.addGeojsonSource(map_config, rs?.data);
 				})
 				.catch((e) => console.error(e));
@@ -311,6 +318,14 @@ export const useMapStore = defineStore("map", {
 			if (!Array.isArray(data.features)||data.features == null || data.features?.length==0 ) {
 				return;
 			}
+
+			// 限制處理的特徵數量
+			const MAX_FEATURES = 10000; // 設置一個合理的上限
+			if (data.features.length > MAX_FEATURES) {
+				console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
+				data.features = data.features.slice(0, MAX_FEATURES);
+			}
+
 
 			if (!["voronoi", "isoline"].includes(map_config.type)) {
 				this.map.addSource(`${map_config.layerId}-source`, {
