@@ -7,6 +7,7 @@ from utils.load_stage import (
     save_geodataframe_to_postgresql,
     update_lasttime_in_data_to_dataset_info,
 )
+
 from datetime import datetime
 from utils.transform_address import (
     clean_data,
@@ -115,8 +116,10 @@ def _transfer(**kwargs):
         history_table=history_table,
         # geometry_type=GEOMETRY_TYPE,
     )
-    lasttime_in_data = data["data_time"].max()
-    update_lasttime_in_data_to_dataset_info(engine, dag_id, lasttime_in_data)
+
+
+    # lasttime_in_data = data["data_time"].max()
+    # update_lasttime_in_data_to_dataset_info(engine, dag_id, lasttime_in_data)
 
 
 dag = CommonDag(proj_folder="proj_city_dashboard/v2", dag_folder= dag_id)
