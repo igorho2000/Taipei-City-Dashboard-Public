@@ -34,7 +34,7 @@ def _transfer(**kwargs):
     load_behavior = dag_infos.get("load_behavior")
     default_table = dag_infos.get("ready_data_default_table")
     history_table = dag_infos.get("ready_data_history_table")
-    RID = "01370301-b843-4b60-ae8c-6a8789880bfe"
+    RID = "5f239e5c-9388-4dc2-b6a6-f65491edd78a"
     FROM_CRS = 4326
     GEOMETRY_TYPE = "Point"
 
