@@ -676,18 +676,14 @@ export const useMapStore = defineStore("map", {
 			let latEnd = 25.21811;
 
 			let targetPoints = [];
-
-			// 限制 grid 大小
-			const MAX_GRID_SIZE = 1000;
-
 			let gridSize = 0.001;
 			let rowN = 0;
 			let colN = 0;
 
 			// - Generate target point coordinates
-			for (let i = latStart; i <= latEnd && rowN < MAX_GRID_SIZE; i += gridSize, rowN += 1) {
+			for (let i = latStart; i <= latEnd; i += gridSize, rowN += 1) {
 				colN = 0;
-				for (let j = lngStart; j <= lngEnd && colN < MAX_GRID_SIZE; j += gridSize, colN += 1) {
+				for (let j = lngStart; j <= lngEnd; j += gridSize, colN += 1) {
 					targetPoints.push({ x: j, y: i });
 				}
 			}
@@ -698,9 +694,9 @@ export const useMapStore = defineStore("map", {
 			// Step 2: Calculate isolines from the 2D scalar field
 			// - Turn the interpolation result into the format that can be accepted by marchingSquare()
 			let discreteData = [];
-			for (let y = 0; y < Math.min(rowN, MAX_GRID_SIZE); y++) {
+			for (let y = 0; y < rowN; y++) {
 				discreteData.push([]);
-				for (let x = 0; x < Math.min(colN, MAX_GRID_SIZE); x++) {
+				for (let x = 0; x < colN; x++) {
 					discreteData[y].push(interpolationResult[y * colN + x]);
 				}
 			}
