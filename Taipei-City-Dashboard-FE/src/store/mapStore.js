@@ -291,15 +291,16 @@ export const useMapStore = defineStore("map", {
 						return;
 					}
 
-					if (!Array.isArray(rs?.data) ||rs?.data == null || rs?.data?.length==0 ) {
+					if (!Array.isArray(rs?.data) || rs?.data == null || rs?.data?.length==0 ) {
 						console.error("Invalid data structure");
 						return;
 					}
 
-					const MAX_GRID_SIZE = 1000;
-					
-					if(rs?.data.length > MAX_GRID_SIZE){
-						return
+					// 限制處理的特徵數量
+					const MAX_FEATURES = 10000; // 設置一個合理的上限
+					if (rs.data.features.length > MAX_FEATURES) {
+						console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
+						rs.data.features.length = MAX_FEATURES;
 					}
 
 					this.addGeojsonSource(map_config, rs?.data);
