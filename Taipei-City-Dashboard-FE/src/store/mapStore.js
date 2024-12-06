@@ -296,13 +296,6 @@ export const useMapStore = defineStore("map", {
 						return;
 					}
 
-					// 限制處理的特徵數量
-					const MAX_FEATURES = 10000; // 設置一個合理的上限
-					if (rs.data.features.length > MAX_FEATURES) {
-						console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
-						rs.data.features.length = MAX_FEATURES;
-					}
-
 					this.addGeojsonSource(map_config, rs?.data);
 				})
 				.catch((e) => console.error(e));
@@ -586,6 +579,19 @@ export const useMapStore = defineStore("map", {
 
 			// Get features alone
 			let { features } = data;
+
+			// 驗證 features 是否為有效的數組
+			if (!Array.isArray(features)) {
+				console.error("Invalid features data");
+				return;
+			}
+
+			// 限制處理的特徵數量
+			const MAX_FEATURES = 10000; // 設置一個合理的上限
+			if (features.length > MAX_FEATURES) {
+				console.warn(`Data exceeds maximum allowed features (${MAX_FEATURES}). Truncating.`);
+				features = features.slice(0, MAX_FEATURES);
+			}
 
 			// Get coordnates alone
 			let coords = features.map(
