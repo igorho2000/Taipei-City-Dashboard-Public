@@ -8,11 +8,11 @@ import { useDialogStore } from "./dialogStore";
 import { useMapStore } from "./mapStore";
 import { DataManager } from "../assets/utilityFunctions/dataManager.js";
 
-export const usePersonStore = defineStore("auth", {
+export const usePersonStore = defineStore("person", {
 	state: () => ({
 		person: {
 			person_id: null,
-			account: "",
+			login_name: "",
 			name: "",
 			is_active: null,
 			is_whitelist: null,
@@ -55,14 +55,14 @@ export const usePersonStore = defineStore("auth", {
 			contentStore.setContributors();
 		},
 		// 2. Email Login
-		async loginByEmail(email, password) {
+		async loginByEmail(email, p) {
 			const response = await http.post(
 				"/auth/login",
 				{},
 				{
 					auth: {
 						username: email,
-						password: password,
+						password: p,
 					},
 				}
 			);

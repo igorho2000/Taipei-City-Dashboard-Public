@@ -326,8 +326,10 @@ export const useMapStore = defineStore("map", {
 					`${location.origin}/geo_server/taipei_vioc/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=taipei_vioc%3A${map_config.index}&maxFeatures=1000000&outputFormat=application%2Fjson`
 				);
 
-				// 驗證 res.data
-				if (!res.data || !res.data.features || !Array.isArray(res.data.features)) {
+				const mapData = res.data;
+
+				// 驗證 mapData
+				if (!mapData || !mapData.features || !Array.isArray(mapData.features)) {
 					console.error('Invalid data received from the server');
 					return;
 				}
@@ -335,13 +337,13 @@ export const useMapStore = defineStore("map", {
 				if (map_config.type === "arc") {
 					this.map.addSource(`${map_config.layerId}-source`, {
 						type: "geojson",
-						data: { ...res.data },
+						data: { ...mapData },
 					});
-					this.AddArcMapLayer(map_config, res.data);
+					this.AddArcMapLayer(map_config, mapData);
 				} else if (map_config.type === "voronoi") {
-					this.AddVoronoiMapLayer(map_config, res.data);
+					this.AddVoronoiMapLayer(map_config, mapData);
 				} else if (map_config.type === "isoline") {
-					this.AddIsolineMapLayer(map_config, res.data);
+					this.AddIsolineMapLayer(map_config, mapData);
 				}
 			} else {
 				this.map.addSource(`${map_config.layerId}-source`, {
