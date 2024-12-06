@@ -1,6 +1,6 @@
 from airflow import DAG
 from operators.common_pipeline import CommonDag
-from proj_city_dashboard.R0023.crime_etl import crime_etl
+from proj_city_dashboard.v1.R0023.crime_etl import crime_etl
 
 
 def _R0027(**kwargs):

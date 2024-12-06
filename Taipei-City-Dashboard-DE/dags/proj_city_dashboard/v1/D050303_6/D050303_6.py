@@ -1,6 +1,6 @@
 from airflow import DAG
 from operators.common_pipeline import CommonDag
-from proj_city_dashboard.D050303_5.pavement_etl import pavement_etl
+from proj_city_dashboard.v1.D050303_5.pavement_etl import pavement_etl
 
 def D050303_6(**kwargs):
     # Config
