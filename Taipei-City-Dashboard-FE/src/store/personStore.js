@@ -24,7 +24,7 @@ export const usePersonStore = defineStore("person", {
 		code: null,
 		taipei_code: null,
 		errorMessage: "",
-		isMobileDevice: false,
+		isMbDevice: false,
 		isNarrowDevice: false,
 		currentPath: "",
 	}),
@@ -158,10 +158,10 @@ export const usePersonStore = defineStore("person", {
 		// This is used to determine whether to show the mobile version of the dashboard.
 		checkIfMb() {
 			if (navigator.maxTouchPoints > 2) {
-				this.isMobileDevice = true;
+				this.isMbDevice = true;
 			}
 			if (window.matchMedia("(pointer:fine)").matches) {
-				this.isMobileDevice = false;
+				this.isMbDevice = false;
 			}
 			if (window.screen.width < 750) {
 				this.isNarrowDevice = true;

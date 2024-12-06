@@ -43,7 +43,7 @@ const linkQuery = computed(() => {
     <div
       v-if="
         personStore.currentPath !== 'admin' &&
-          !(personStore.isMobileDevice && personStore.isNarrowDevice)
+          !(personStore.isMbDevice && personStore.isNarrowDevice)
       "
       class="navbar-tabs"
     >
@@ -74,7 +74,7 @@ const linkQuery = computed(() => {
     </div>
     <div class="navbar-user">
       <button
-        v-if="!(personStore.isMobileDevice && personStore.isNarrowDevice)"
+        v-if="!(personStore.isMbDevice && personStore.isNarrowDevice)"
         class="hide-if-mobile"
         @click="toggle"
       >
@@ -107,7 +107,7 @@ const linkQuery = computed(() => {
       <div
         v-if="
           personStore.code &&
-            !(personStore.isMobileDevice && personStore.isNarrowDevice)
+            !(personStore.isMbDevice && personStore.isNarrowDevice)
         "
         class="navbar-user-user"
       >
@@ -151,7 +151,7 @@ const linkQuery = computed(() => {
       </div>
       <div
         v-else-if="
-          !(personStore.isMobileDevice && personStore.isNarrowDevice)
+          !(personStore.isMbDevice && personStore.isNarrowDevice)
         "
         class="navbar-user-user"
       >

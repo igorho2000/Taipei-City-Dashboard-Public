@@ -118,7 +118,7 @@ router.beforeEach((to) => {
 // Redirects blocked routes in mobile mode
 router.beforeEach((to) => {
 	const personStore = usePersonStore();
-	if (personStore.isMobileDevice && personStore.isNarrowDevice) {
+	if (personStore.isMbDevice && personStore.isNarrowDevice) {
 		if (
 			!["dashboard", "component-info", "callback", "embed"].includes(
 				to.name

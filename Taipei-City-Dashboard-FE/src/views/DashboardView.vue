@@ -38,7 +38,7 @@ function toggleFavorite(id) {
 	}
 }
 function handleMoreInfo(item) {
-	if (personStore.isMobileDevice && personStore.isNarrowDevice) {
+	if (personStore.isMbDevice && personStore.isNarrowDevice) {
 		router.push({
 			name: "component-info",
 			params: { index: item.index },

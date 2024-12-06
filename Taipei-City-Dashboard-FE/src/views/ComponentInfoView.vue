@@ -52,7 +52,7 @@ onMounted(() => {
   <div class="componentinfoview-header">
     <button
       v-if="
-        personStore.isMobileDevice ||
+        personStore.isMbDevice ||
           personStore.isNarrowDevice ||
           !personStore.code
       "

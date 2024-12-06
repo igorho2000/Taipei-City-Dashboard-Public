@@ -152,7 +152,7 @@ export const useMapStore = defineStore("map", {
 						.addLayer(TaipeiVillage);
 				});
 			// Taipei 3D Buildings
-			if (!personStore.isMobileDevice) {
+			if (!personStore.isMbDevice) {
 				this.map
 					.addSource("taipei_building_3d_source", {
 						type: "vector",
@@ -285,6 +285,12 @@ export const useMapStore = defineStore("map", {
 			axios
 				.get(`/mapData/${map_config.index}.geojson`)
 				.then((rs) => {
+					// 驗證 res
+					if (!rs || typeof rs !== 'object') {
+						console.error('Invalid response from the server');
+						return;
+					}
+
 					if (!Array.isArray(rs?.data) ||rs?.data == null || rs?.data?.length==0 ) {
 						console.error("Invalid data structure");
 						return;
@@ -300,7 +306,7 @@ export const useMapStore = defineStore("map", {
 				console.error("Invalid data structure");
 				return;
 			}
-			
+
 			if (!Array.isArray(data.features)||data.features == null || data.features?.length==0 ) {
 				return;
 			}
@@ -333,6 +339,12 @@ export const useMapStore = defineStore("map", {
 				const res = await axios.get(
 					`${location.origin}/geo_server/taipei_vioc/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=taipei_vioc%3A${map_config.index}&maxFeatures=1000000&outputFormat=application%2Fjson`
 				);
+
+				// 驗證 res
+				if (!res || typeof res !== 'object') {
+					console.error('Invalid response from the server');
+					return;
+				}
 
 				const mapData = res?.data;
 
