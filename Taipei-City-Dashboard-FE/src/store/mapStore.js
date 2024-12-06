@@ -286,7 +286,7 @@ export const useMapStore = defineStore("map", {
 				.get(`/mapData/${map_config.index}.geojson`)
 				.then((rs) => {
 					// 驗證 res
-					if (!rs || typeof rs !== 'object') {
+					if (!rs ||rs == null || rs == undefined) {
 						console.error('Invalid response from the server');
 						return;
 					}
@@ -341,7 +341,7 @@ export const useMapStore = defineStore("map", {
 				);
 
 				// 驗證 res
-				if (!res || typeof res !== 'object') {
+				if (!res ||res == null || res == undefined) {
 					console.error('Invalid response from the server');
 					return;
 				}
