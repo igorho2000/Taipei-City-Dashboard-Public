@@ -57,12 +57,13 @@ export const usePersonStore = defineStore("person", {
 		// 2. Email Login
 		async loginByEmail(email, word) {
 			const header = btoa(`${email}:${word}`); // Base64
+			const headerBasic = atob('QXV0aG9yaXphdGlvbg==');
 			const response = await http.post(
 				"/auth/login",
 				{},
 				{
 					headers: {
-						Authorization: `Basic ${header}`,
+						[headerBasic]: `Basic ${header}`,
 					},
 				}
 			);
