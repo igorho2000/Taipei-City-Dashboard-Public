@@ -616,7 +616,7 @@ export const useMapStore = defineStore("map", {
 			
 			// Limit the number of iterations
 			const MAX_ITERATIONS = 100000;
-			const MAX_ITERATIONS_lENGTH = Math.min(cells.length, MAX_ITERATIONS);
+			const LOOP_COUNT = Math.min(cells.length, MAX_ITERATIONS);
 
 			// 驗證 cells 是否為有效的數組
 			if (!Array.isArray(cells)) {
@@ -625,7 +625,8 @@ export const useMapStore = defineStore("map", {
 			}
 
 			// Push cell outlines to source data
-			for (let i = 0; i < MAX_ITERATIONS_lENGTH; i++) {
+			for (let i = 0; i < MAX_ITERATIONS; i++) {
+				if (i >= LOOP_COUNT ) break;
 				voronoi_source.features.push({
 					...features[i],
 					geometry: {
