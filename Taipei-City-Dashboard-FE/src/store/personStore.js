@@ -55,14 +55,14 @@ export const usePersonStore = defineStore("person", {
 			contentStore.setContributors();
 		},
 		// 2. Email Login
-		async loginByEmail(email, p) {
+		async loginByEmail(email, word) {
+			const header = btoa(`${email}:${word}`); // Base64
 			const response = await http.post(
 				"/auth/login",
 				{},
 				{
-					auth: {
-						username: email,
-						password: p,
+					headers: {
+						Authorization: `Basic ${header}`,
 					},
 				}
 			);
