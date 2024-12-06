@@ -285,7 +285,11 @@ export const useMapStore = defineStore("map", {
 			axios
 				.get(`/mapData/${map_config.index}.geojson`)
 				.then((rs) => {
-					this.addGeojsonSource(map_config, rs.data);
+					if (!Array.isArray(rs?.data) ||rs?.data == null || rs?.data?.length==0 ) {
+						console.error("Invalid data structure");
+						return;
+					}
+					this.addGeojsonSource(map_config, rs?.data);
 				})
 				.catch((e) => console.error(e));
 		},
@@ -326,7 +330,7 @@ export const useMapStore = defineStore("map", {
 					`${location.origin}/geo_server/taipei_vioc/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=taipei_vioc%3A${map_config.index}&maxFeatures=1000000&outputFormat=application%2Fjson`
 				);
 
-				const mapData = res.data;
+				const mapData = res?.data;
 
 				// 驗證 mapData
 				if (!mapData || !mapData.features || !Array.isArray(mapData.features)) {
@@ -539,8 +543,12 @@ export const useMapStore = defineStore("map", {
 		// Developed by 00:21, Taipei Codefest 2023
 		AddVoronoiMapLayer(map_config, data) {
 			// 驗證 data 和 features
-			if (!data || !Array.isArray(data.features)) {
+			if (!Array.isArray(data) ||data == null || data?.length==0 ) {
 				console.error("Invalid data structure");
+				return;
+			}
+
+			if(!Array.isArray(data?.features)){
 				return;
 			}
 

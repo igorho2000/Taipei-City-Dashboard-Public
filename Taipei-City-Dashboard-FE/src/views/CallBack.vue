@@ -12,7 +12,7 @@ onMounted(() => {
 	if (!code || code.length !== 6 || personStore.code) {
 		router.replace("/dashboard");
 	} else {
-		personStore.loginByTaipeiPass(code);
+		personStore.loginByTaipei(code);
 	}
 });
 </script>

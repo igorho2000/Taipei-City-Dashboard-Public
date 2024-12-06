@@ -36,7 +36,7 @@ export const usePersonStore = defineStore("person", {
 			const contentStore = useContentStore();
 			const mapStore = useMapStore();
 			// Check if the user is using a mobile device
-			this.checkIfMobile();
+			this.checkIfMb();
 
 			// Check if the user is logged in
 			if (localStorage.getItem("code")) {
@@ -69,7 +69,7 @@ export const usePersonStore = defineStore("person", {
 			this.handleSuccessfullLogin(response);
 		},
 		// 3. Taipei Pass Login
-		async loginByTaipeiPass(code) {
+		async loginByTaipei(code) {
 			try {
 				// Validate code parameter
 				if (!code || typeof code !== 'string') {
@@ -156,7 +156,7 @@ export const usePersonStore = defineStore("person", {
 		/* Other Utility Functions */
 		// 1. Check if the user is using a mobile device.
 		// This is used to determine whether to show the mobile version of the dashboard.
-		checkIfMobile() {
+		checkIfMb() {
 			if (navigator.maxTouchPoints > 2) {
 				this.isMobileDevice = true;
 			}
