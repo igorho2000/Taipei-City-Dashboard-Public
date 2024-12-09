@@ -43,10 +43,10 @@ export function marchingSquare(discreteData, isoValue) {
 	//  └────────┴────────┴────────┴─ -> longitude increases
 
 	for (let row = 0; row < maxRow; row++) {
-		if (row >= maxRow) break;
+		if (row >= discreteData.length) break;
 
 		for (let col = 0; col < maxCol; col++) {
-			if (col >= maxCol) break;
+			if (col >= discreteData[0].length) break;
 			
 			// Drawing isoline for the following square surrounded by four discreteData values:
 			//
