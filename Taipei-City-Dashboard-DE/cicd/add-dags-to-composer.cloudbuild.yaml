@@ -43,3 +43,5 @@ steps:
 options:
   logging: CLOUD_LOGGING_ONLY
 # [END composer_cicd_dagsync_yaml]
+options:
+    logging: CLOUD_LOGGING_ONLY

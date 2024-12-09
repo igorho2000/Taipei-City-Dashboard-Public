@@ -11,10 +11,9 @@ Developed By Taipei Urban Intelligence Center 2023-2024
 package middleware
 
 import (
-	"net/http"
-
 	"TaipeiCityDashboardBE/app/models"
 	"TaipeiCityDashboardBE/app/util"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )

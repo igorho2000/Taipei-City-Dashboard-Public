@@ -7,6 +7,7 @@ def _R0051_4(**kwargs):
     import pandas as pd
     import requests
     from sqlalchemy import create_engine
+    from geoalchemy2 import WKTElement
     from utils.load_stage import (
         save_geodataframe_to_postgresql,
         update_lasttime_in_data_to_dataset_info,
@@ -33,15 +34,18 @@ def _R0051_4(**kwargs):
 
     # Transform
     data = raw_data.copy()
+    data = data.drop_duplicates(subset=["sno", "mday"], keep="last").reset_index(
+        drop=True
+    )
 
     data = data.rename(columns={"srcUpdateTime": "data_time"})
     data["data_time"] = convert_str_to_time_format(data["data_time"])
+    # geometry
     gdata = add_point_wkbgeometry_column_to_df(
-        data, data["longitude"], data["latitude"], from_crs=FROM_CRS
+        data, x=data["longitude"], y=data["latitude"], from_crs=FROM_CRS
     )
 
-    ready_data = gdata[["sno", "sna", "geometry", "data_time"]]
-    ready_data = ready_data.rename(columns={"geometry": "geom"})
+    ready_data = gdata[["sno", "sna", "data_time", "wkb_geometry"]]
 
     # Load
     engine = create_engine(ready_data_db_uri)

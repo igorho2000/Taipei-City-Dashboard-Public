@@ -97,6 +97,7 @@ func ExecIssoAuth(c *gin.Context) {
 		urlGetToken := global.Isso.TaipeipassURL + "/oauth/token"
 		body := "grant_type=authorization_code&client_id=" + global.Isso.ClientID + "&client_secret=" + global.Isso.ClientSecret + "&code=" + code
 		// header
+		logs.FInfo("url: %s client_id: %s client_secret: %s code: %s", urlGetToken, global.Isso.ClientID, global.Isso.ClientSecret, code)
 		headers := make(http.Header)
 		headers.Add("Content-Type", "application/x-www-form-urlencoded")
 		// get User Token
@@ -265,19 +266,21 @@ func HTTPClientRequest(method, url, payload string, headers http.Header) []byte 
 
 	// 設定自定義頭部
 	req.Header = headers
-
 	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-	defer res.Body.Close()
-
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
+    if err != nil {
+        logs.FInfo("request_url: %s err1: %s", url, err)
+        fmt.Println(err)
+        return nil
+    }
+    defer res.Body.Close()
+ 
+    body, err := io.ReadAll(res.Body)
+    if err != nil {
+        logs.FInfo("request_url: %s err2: %s", url, err)
+        fmt.Println(err)
+        return nil
+    }
+    logs.FInfo("request_url: %s response_code: %d", url, res.StatusCode)
 
 	return body
 }
