@@ -19,16 +19,22 @@ export function interpolation(dataPoints, targetPoints) {
 	if (!Array.isArray(dataPoints) || !Array.isArray(targetPoints)) {
 		return answers;
 	}
+
+	// Set maximum limits for data points to prevent excessive processing
+	const MAX_DATA_POINTS = 10000;
+	const MAX_TARGET_POINTS = 10000;
 	
 	const pointCount = dataPoints.length;
 
-	for (let k = 0; k < targetPoints.length; k++) {
+	for (let k = 0; k < MAX_TARGET_POINTS; k++) {
+		if(k >= targetPoints.length) break;
 		if (dataPoints.includes(targetPoints[k])) {
 			answers.push(dataPoints[dataPoints.indexOf(targetPoints[k])].value);
 		} else {
 			let weight_sum = 0;
 			let weight_value = 0;
-			for (let i = 0; i < pointCount; i++) {
+			for (let i = 0; i < MAX_DATA_POINTS; i++) {
+				if(i >= pointCount) break;
 				let weight =
 					1 /
 					((dataPoints[i].x - targetPoints[k].x) ** 2 +
