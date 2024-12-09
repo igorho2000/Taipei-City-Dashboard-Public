@@ -27,7 +27,6 @@ export function interpolation(dataPoints, targetPoints) {
 	const pointCount = Math.min(dataPoints.length, MAX_DATA_POINTS);
 	const targetCount = Math.min(targetPoints.length, MAX_TARGET_POINTS);
 
-
 	for (let k = 0; k < targetCount; k++) {
 		if(k >= targetPoints.length) break;
 		if (dataPoints.includes(targetPoints[k])) {
