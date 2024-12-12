@@ -291,6 +291,12 @@ export const useMapStore = defineStore("map", {
 						return;
 					}
 
+					// 驗證 res.data
+					if (!rs?.data || rs?.data == null || rs?.data == undefined) {
+						console.error('Invalid response data from the server');
+						return;
+					}
+
 					this.addGeojsonSource(map_config, rs?.data);
 				})
 				.catch((e) => console.error(e));
@@ -299,7 +305,7 @@ export const useMapStore = defineStore("map", {
 		addGeojsonSource(map_config, data) {
 			// 驗證 data
 			if (!data ||data == null || data == undefined) {
-				console.error('Invalid response from the server');
+				console.error('Invalid response data from the server');
 				return;
 			}
 
@@ -339,6 +345,12 @@ export const useMapStore = defineStore("map", {
 				// 驗證 res
 				if (!res ||res == null || res == undefined) {
 					console.error('Invalid response from the server');
+					return;
+				}
+
+				// 驗證 res.data
+				if (!res?.data || res?.data == null || res?.data == undefined) {
+					console.error('Invalid response data from the server');
 					return;
 				}
 
