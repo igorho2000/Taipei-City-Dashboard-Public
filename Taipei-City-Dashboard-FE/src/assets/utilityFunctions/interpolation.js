@@ -34,6 +34,7 @@ export function interpolation(dataPoints, targetPoints) {
 		} else {
 			let weight_sum = 0;
 			let weight_value = 0;
+
 			for (let i = 0; i < MAX_DATA_POINTS; i++) {
 				if (i >= MAX_DATA_LOOP ) break;
 				let weight =

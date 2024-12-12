@@ -5,8 +5,7 @@ from sqlalchemy import create_engine
 from utils.extract_stage import get_data_taipei_api
 from utils.load_stage import (
     save_geodataframe_to_postgresql,
-    update_lasttime_in_data_to_dataset_info, 
-    save_dataframe_to_postgresql
+    update_lasttime_in_data_to_dataset_info, save_dataframe_to_postgresql
 )
 from datetime import datetime
 from utils.transform_address import (
@@ -43,11 +42,11 @@ def _transfer(**kwargs):
     ## Extract
     ##############
     raw_list = get_data_taipei_api(RID)
+    print(raw_list)
     raw_data = pd.DataFrame(raw_list)
-    # raw_data["data_time"] = raw_data["_importdate"].iloc[0]["date"]
-    
-    raw_data["etl_dtm"] = datetime.now()
     print(raw_data)
+    # raw_data["data_time"] = raw_data["_importdate"].iloc[0]["date"]
+
 
     ##############
     ## Transform
@@ -65,6 +64,28 @@ def _transfer(**kwargs):
             "累積節電量": "acc_enegry_saving_amt",
         }
     )
+
+
+    # 將民國年份轉為西元年份
+    data["data_time"] = data["data_year"].astype(int) + 1911
+
+    # 將年份轉為 datetime 格式，假設日期為 12 月 31 日
+    data["data_time"] = pd.to_datetime(data["data_time"].astype(str) + "-12-31")
+
+    # 將 datetime 格式轉為指定的字串格式，並加上固定時區偏移
+    data["data_time"] = data["data_time"].dt.strftime("%Y-%m-%d %H:%M:%S+08")
+
+
+    print(data)
+    # 整數轉換
+    data["num_of_approval"] = data["num_of_approval"].apply(lambda x:x.replace(",","")).astype('int')
+    data["acc_num_of_approval"] = data["acc_num_of_approval"].apply(lambda x:x.replace(",","")).astype('int')
+    data["subsidy_amt"] = data["subsidy_amt"].apply(lambda x:x.replace(",","")).astype('int')
+    data["acc_subsidy_amt"] = data["acc_subsidy_amt"].apply(lambda x:x.replace(",","")).astype('int')
+    data["enegry_saving_amt"] = data["enegry_saving_amt"].apply(lambda x:x.replace(",","")).astype('int')
+    data["acc_enegry_saving_amt"] = data["acc_enegry_saving_amt"].apply(lambda x:x.replace(",","")).astype('int')
+
+    
 
     # # standardize time
     # data["etl_dtm"] = convert_str_to_time_format(data["etl_dtm"])
@@ -90,9 +111,22 @@ def _transfer(**kwargs):
     #     data, data["lng"], data["lat"], from_crs=FROM_CRS
     # )
 
+    keep_col = [
+            "data_time",
+            "data_year",
+             "num_of_approval",
+             "acc_num_of_approval",
+             "subsidy_amt",
+             "acc_subsidy_amt",
+             "enegry_saving_amt",
+             "acc_enegry_saving_amt"
+    ]
+
+
+
 
     # select columns
-    ready_data = data
+    ready_data = data[keep_col]
 
     # Load
     engine = create_engine(ready_data_db_uri)

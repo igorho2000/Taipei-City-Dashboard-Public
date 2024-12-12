@@ -42,6 +42,7 @@ export function marchingSquare(discreteData, isoValue) {
 	//  │ [0][0]-> [0][1]-> [0][2]->
 	//  └────────┴────────┴────────┴─ -> longitude increases
 
+
 	for (let row = 0; row < MAX_GRID_SIZE; row++) {
 		if (row >= maxRow ) break;
 
